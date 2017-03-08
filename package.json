@@ -1,0 +1,14 @@
+{
+  "name": "hearthstone_stats",
+  "version": "0.0.1",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "christian",
+  "license": "ISC",
+  "dependencies": {
+    "sqlite": "^2.3.0"
+  }
+}
