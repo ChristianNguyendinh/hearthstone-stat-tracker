@@ -25,15 +25,15 @@ server.listen(3000, function() {
 
 
 function accessDatabase() {
-	db.serialize(() => {
+    db.serialize(() => {
 
-		db.run('INSERT INTO users (name) VALUES ("Bill")');
+    db.run('INSERT INTO users (name) VALUES ("Bill")');
 
-		db.each('SELECT * FROM users', (err, row) => {
-			if (!err)
-				console.log(row.id + " : " + row.name);
-		});
-	});
+    db.each('SELECT * FROM users', (err, row) => {
+        if (!err)
+            console.log(row.id + " : " + row.name);
+        });
+    });
 
-	db.close();
+    db.close();
 }
