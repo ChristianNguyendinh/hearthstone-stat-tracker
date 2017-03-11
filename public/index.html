@@ -11,12 +11,27 @@
 <body>
     <div id="content">
         <h1>Hello World</h1>
-        <button id="goButton">Get Stats</button>
+        <form id="gameForm">
+            Your Deck <br />
+            <input type="text" name="mdeck" required> <br /> <br >
+            <input type="radio" name="result" value="win" required> 
+            Win <br />
+            <input type="radio" name="result" value="lose" required> 
+            Lose <br /> <br />
+            Their Deck <br />
+            <input type="text" name="tdeck" required> <br />
+            <input type="submit" value="Get Stats">
+        </form>
     </div>
 
     <script>
-        $('#goButton').click(function(e) {
-            console.log("button clicked")
+        $('#gameForm').submit(function(e) {
+            console.log($('#gameForm').serializeArray())
+            /* Post here when adding a game state. When render stats server will req and load new page with data*/
+            $.ajax({url: "api/1"}).done(function(data) {
+                console.log(data);
+            });
+            e.preventDefault();
         });
     </script>
 </body>

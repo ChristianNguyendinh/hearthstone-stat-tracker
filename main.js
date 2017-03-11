@@ -1,14 +1,27 @@
 var express = require('express');
 var server = express();
-var path = require('path')
+var path = require('path');
+var request = require("request");
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('test.db');
 
-server.use(express.static(path.join(__dirname, 'public')));
+var options = {
+    host: "127.0.0.1",
+    path: "/api/bob"
+}
 
 server.get('/', function(req, res) {
-    res.sendFile('index.html')
+    res.sendFile(path.join(__dirname, 'public/index.html'));
+
+    request("http://127.0.0.1:3000/api/bob", function(error, response, body) {
+        if (error)
+            console.log(error)
+        let j = JSON.parse(body)
+        console.log(j.student);
+    });
 });
+
+server.use(express.static(path.join(__dirname, 'public')));
 
 server.route('/api/:name')
     .post(function(req, res) {
@@ -23,17 +36,24 @@ server.listen(3000, function() {
     console.log("server started on port 3000");
 });
 
+callback = function(res) {
+    console.log("hey")
+    res.on('data', function(data) {
+        console.log(data);
+    })
+};
 
-function accessDatabase() {
+accessDatabase = function() {
     db.serialize(() => {
 
-    db.run('INSERT INTO users (name) VALUES ("Bill")');
+        db.run('INSERT INTO users (name) VALUES ("Bill")');
 
-    db.each('SELECT * FROM users', (err, row) => {
-        if (!err)
-            console.log(row.id + " : " + row.name);
-        });
+        db.each('SELECT * FROM users', (err, row) => {
+            if (!err)
+                console.log(row.id + " : " + row.name);
+            });
     });
 
     db.close();
-}
+};
+
