@@ -14,15 +14,19 @@ server.use(bodyparser.urlencoded({
 server.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, 'public/index.html'));
 
-    request("http://127.0.0.1:3000/api/bob", function(error, response, body) {
+    /*request("http://127.0.0.1:3000/api/bob", function(error, response, body) {
         if (error)
             console.log(error)
         let j = JSON.parse(body)
         console.log(j.student);
-    });
+    });*/
 });
 
-server.route('/api/:name')
+server.get('/graphs/', function(req, res) {
+    res.sendFile(path.join(__dirname, 'public/graphs.html'));
+});
+
+server.route('/api/:name/')
     .post(function(req, res) {
         console.log(req.body);
         console.log(req.body.name);
