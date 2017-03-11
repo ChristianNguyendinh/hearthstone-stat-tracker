@@ -57,7 +57,7 @@
                     obj['result'] = x.value;
                 }
             });
-            obj['date'] = (new Date()).toString();
+            obj['date'] = (new Date()).toString().split(" G")[0];
 
             var data = obj;
             console.log(data);

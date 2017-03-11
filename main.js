@@ -27,6 +27,7 @@ server.route('/api/:name')
         console.log(req.body);
         console.log(req.body.name);
         console.log(req.body.date);
+        addGame(req.body);
         res.json({ message: "good" });
     })
     .get(function(req, res) {
@@ -39,24 +40,24 @@ server.listen(3000, function() {
     console.log("server started on port 3000");
 });
 
-callback = function(res) {
-    console.log("hey")
-    res.on('data', function(data) {
-        console.log(data);
-    })
+cleanup = function() {
+    console.log("closing database and cleaning up");
+    db.close;
 };
 
-accessDatabase = function() {
+addGame = function(data) {
     db.serialize(() => {
+        db.run('INSERT INTO combined (name, deck, opponent, result, date) VALUES ("' + 
+            data.name + '", "' + data.mdeck + '", "' + data.tdeck + '", "' + data.result + '", "' + data.date + '")');
 
-        db.run('INSERT INTO users (name) VALUES ("Bill")');
-
-        db.each('SELECT * FROM users', (err, row) => {
+        /*db.each('SELECT * FROM users', (err, row) => {
             if (!err)
                 console.log(row.id + " : " + row.name);
-            });
-    });
+            });*/
 
-    db.close();
+        console.log("game added");
+    });
 };
+
+process.on('exit', cleanup);
 
