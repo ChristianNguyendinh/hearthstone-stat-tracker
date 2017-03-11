@@ -46,10 +46,27 @@
 
     <script>
         $('#gameForm').submit(function(e) {
-            console.log($('#gameForm').serializeArray())
+            var obj = {};
+            obj['name'] = 'testName';
+            $('#gameForm').serializeArray().forEach(function(x) {
+                if (x.name == 'mdeck') {
+                    obj['mdeck'] = x.value;
+                } else if (x.name == 'tdeck') {
+                    obj['tdeck'] = x.value;
+                } else {
+                    obj['result'] = x.value;
+                }
+            });
+            obj['date'] = (new Date()).toString();
+
+            var data = obj;
+            console.log(data);
             /* Post here when adding a game state. When render stats server will req and load new page with data*/
-            $.ajax({url: "api/1"}).done(function(data) {
+            /*$.ajax({url: "api/1"}).done(function(data) {
                 console.log(data);
+            });*/
+            $.ajax({type: "POST", url: "api/1", data: data}).done(function(d) {
+                console.log(d);
             });
             e.preventDefault();
         });

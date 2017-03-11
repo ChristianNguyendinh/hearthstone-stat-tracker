@@ -1,14 +1,15 @@
 var express = require('express');
 var server = express();
 var path = require('path');
-var request = require("request");
+var request = require('request');
+var bodyparser = require('body-parser');
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('test.db');
 
-var options = {
-    host: "127.0.0.1",
-    path: "/api/bob"
-}
+server.use(bodyparser.json());
+server.use(bodyparser.urlencoded({
+    extended: true
+}));
 
 server.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, 'public/index.html'));
@@ -23,7 +24,9 @@ server.get('/', function(req, res) {
 
 server.route('/api/:name')
     .post(function(req, res) {
-        console.log(req.params.name);
+        console.log(req.body);
+        console.log(req.body.name);
+        console.log(req.body.date);
         res.json({ message: "good" });
     })
     .get(function(req, res) {
