@@ -21,8 +21,6 @@ server.get('/', function(req, res) {
     });
 });
 
-server.use(express.static(path.join(__dirname, 'public')));
-
 server.route('/api/:name')
     .post(function(req, res) {
         console.log(req.params.name);
@@ -31,6 +29,8 @@ server.route('/api/:name')
     .get(function(req, res) {
         res.json({student: req.params.name});
     });
+
+server.use(express.static(path.join(__dirname, 'public')));
 
 server.listen(3000, function() {
     console.log("server started on port 3000");
