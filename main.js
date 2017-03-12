@@ -39,6 +39,8 @@ server.route('/api/:name/')
     });
 
 server.use(express.static(path.join(__dirname, 'public')));
+server.use('/scripts', express.static(path.join(__dirname, '/node_modules/chart.js/dist/')));
+
 
 server.listen(3000, function() {
     console.log("server started on port 3000");
@@ -51,6 +53,8 @@ cleanup = function() {
 
 addGame = function(data) {
     db.serialize(() => {
+        console.log('INSERT INTO combined (name, deck, opponent, result, date) VALUES ("' + 
+            data.name + '", "' + data.mdeck + '", "' + data.tdeck + '", "' + data.result + '", "' + data.date + '")');
         db.run('INSERT INTO combined (name, deck, opponent, result, date) VALUES ("' + 
             data.name + '", "' + data.mdeck + '", "' + data.tdeck + '", "' + data.result + '", "' + data.date + '")');
 
