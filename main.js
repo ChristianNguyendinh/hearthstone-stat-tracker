@@ -38,6 +38,51 @@ server.route('/api/:name/')
         res.json({student: req.params.name});
     });
 
+// Return the winrate in decimal to 2 decimal places. Ex. {'count': 0.62}
+server.get('/api/winrate/:name', function(req, res) {
+    let ratioArr = [];
+    let ratio = "invalid";
+    db.serialize(() => {
+        db.each('SELECT result FROM combined WHERE name = \"' + req.params.name + '\"', (err, row) => {
+            if (!err) {
+                //console.log(row.id + " : " + row.name);
+                ratioArr.push(row.result);
+            } else {
+                console.log(err)
+            }
+        }, (err, rowc) => {
+            if (!err && rowc > 0) {
+                ratio = ratioArr.reduce((acc, x) => { return x == 'win' ? acc + 1 : acc }, 0);
+                ratio = (ratio / ratioArr.length).toFixed(2);
+            } 
+            res.json({count: ratio});
+        });
+    });
+});
+
+// Return the number of wins and losses. Ex. {'win': 5, 'loss': 12}
+server.get('/api/winloss/:name', function(req, res) {
+    let winloss = {win: 0, lose: 0};
+    db.serialize(() => {
+        db.each('SELECT result FROM combined WHERE name = \"' + req.params.name + '\"', (err, row) => {
+            if (!err) {
+                //console.log(row.id + " : " + row.name);
+                row.result == 'win' ? winloss['win']++ : winloss['lose']++;
+            } else {
+                console.log(err)
+            }
+        }, (err, rowc) => {
+            res.json(winloss);
+        });
+    });
+});
+
+// Returns json data about matches against each class. 
+// Ex. ??? {... 'warlock': {'gamesWonAs': 4, 'gamesPlayedAs': 5, 'gamesLostAgainst': 2, 'gamesPlayedAgainst': 7}, ...} ???
+server.get('/api/classresults/:name', function(req, res) {
+    res.json({'placeholder': false});
+});
+
 server.use(express.static(path.join(__dirname, 'public')));
 server.use('/scripts', express.static(path.join(__dirname, '/node_modules/chart.js/dist/')));
 
@@ -46,11 +91,6 @@ server.listen(3000, function() {
     console.log("server started on port 3000");
 });
 
-cleanup = function() {
-    console.log("closing database and cleaning up");
-    db.close;
-};
-
 addGame = function(data) {
     db.serialize(() => {
         console.log('INSERT INTO combined (name, deck, opponent, result, date) VALUES ("' + 
@@ -58,14 +98,15 @@ addGame = function(data) {
         db.run('INSERT INTO combined (name, deck, opponent, result, date) VALUES ("' + 
             data.name + '", "' + data.mdeck + '", "' + data.tdeck + '", "' + data.result + '", "' + data.date + '")');
 
-        /*db.each('SELECT * FROM users', (err, row) => {
-            if (!err)
-                console.log(row.id + " : " + row.name);
-            });*/
-
         console.log("game added");
     });
 };
 
-process.on('exit', cleanup);
+cleanup = function() {
+    console.log("closing database and cleaning up");
+    db.close;
+    process.exit();
+};
+
+process.on('SIGINT', cleanup);
 
