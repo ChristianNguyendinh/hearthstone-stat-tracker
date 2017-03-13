@@ -45,7 +45,6 @@ server.get('/api/winrate/:name', function(req, res) {
     db.serialize(() => {
         db.each('SELECT result FROM combined WHERE name = \"' + req.params.name + '\"', (err, row) => {
             if (!err) {
-                //console.log(row.id + " : " + row.name);
                 ratioArr.push(row.result);
             } else {
                 console.log(err)
@@ -66,7 +65,6 @@ server.get('/api/winloss/:name', function(req, res) {
     db.serialize(() => {
         db.each('SELECT result FROM combined WHERE name = \"' + req.params.name + '\"', (err, row) => {
             if (!err) {
-                //console.log(row.id + " : " + row.name);
                 row.result == 'win' ? winloss['win']++ : winloss['lose']++;
             } else {
                 console.log(err)
@@ -77,10 +75,34 @@ server.get('/api/winloss/:name', function(req, res) {
     });
 });
 
-// Returns json data about matches against each class. 
-// Ex. ??? {... 'warlock': {'gamesWonAs': 4, 'gamesPlayedAs': 5, 'gamesLostAgainst': 2, 'gamesPlayedAgainst': 7}, ...} ???
+// Returns json data about match records against each class. 
+// Ex. {... 'warlock': {'gamesWonAs': 4, 'gamesPlayedAs': 5, 'gamesLostAgainst': 2, 'gamesPlayedAgainst': 7}, ...}
 server.get('/api/classresults/:name', function(req, res) {
-    res.json({'placeholder': false});
+    let record = {
+        'warlock': { 'gamesWonAs': 0, 'gamesPlayedAs': 0, 'gamesLostAgainst': 0, 'gamesPlayedAgainst': 0 },
+        'warrior': { 'gamesWonAs': 0, 'gamesPlayedAs': 0, 'gamesLostAgainst': 0, 'gamesPlayedAgainst': 0 },
+        'paladin': { 'gamesWonAs': 0, 'gamesPlayedAs': 0, 'gamesLostAgainst': 0, 'gamesPlayedAgainst': 0 },
+        'druid': { 'gamesWonAs': 0, 'gamesPlayedAs': 0, 'gamesLostAgainst': 0, 'gamesPlayedAgainst': 0 },
+        'rogue': { 'gamesWonAs': 0, 'gamesPlayedAs': 0, 'gamesLostAgainst': 0, 'gamesPlayedAgainst': 0 },
+        'priest': { 'gamesWonAs': 0, 'gamesPlayedAs': 0, 'gamesLostAgainst': 0, 'gamesPlayedAgainst': 0 },
+        'hunter': { 'gamesWonAs': 0, 'gamesPlayedAs': 0, 'gamesLostAgainst': 0, 'gamesPlayedAgainst': 0 },
+        'mage': { 'gamesWonAs': 0, 'gamesPlayedAs': 0, 'gamesLostAgainst': 0, 'gamesPlayedAgainst': 0 },
+        'shaman': { 'gamesWonAs': 0, 'gamesPlayedAs': 0, 'gamesLostAgainst': 0, 'gamesPlayedAgainst': 0 }
+    };
+    db.serialize(() => {
+        db.each('SELECT * FROM combined WHERE name = \"' + req.params.name + '\"', (err, row) => {
+            if (!err) {
+                // id | name | deck | opponent | result | date
+                record[row.deck]['gamesPlayedAs']++;
+                record[row.opponent]['gamesPlayedAgainst']++;
+                row.result == 'win' ? record[row.deck]['gamesWonAs']++ : record[row.opponent]['gamesLostAgainst']++;
+            } else {
+                console.log(err)
+            }
+        }, (err, rowc) => {
+            res.json(record);
+        });
+    });
 });
 
 server.use(express.static(path.join(__dirname, 'public')));
@@ -107,6 +129,6 @@ cleanup = function() {
     db.close;
     process.exit();
 };
-
+// this can be done better
 process.on('SIGINT', cleanup);
 
