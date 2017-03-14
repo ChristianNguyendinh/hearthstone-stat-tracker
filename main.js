@@ -106,6 +106,24 @@ server.get('/api/classresults/:name', function(req, res) {
 });
 
 // Day/Time functions here for later
+server.get('/api/timestats/:name', function(req, res) {
+    let dateObj = {};
+    dateObj['dayCount'] = (new Array(28)).fill(0);
+    dateObj['monthCount'] = (new Array(12)).fill(0);
+    let today = new Date();
+    db.serialize(() => {
+        db.each('SELECT date FROM combined WHERE name = \"' + req.params.name + '\"', (err, row) => {
+            if (!err) {
+                // id | name | deck | opponent | result | date
+                // ??
+            } else {
+                console.log(err)
+            }
+        }, (err, rowc) => {
+            res.json(dateObj);
+        });
+    });
+});
 
 server.use(express.static(path.join(__dirname, 'public')));
 server.use('/scripts', express.static(path.join(__dirname, '/node_modules/chart.js/dist/')));
