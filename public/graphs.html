@@ -12,21 +12,34 @@
 <body style="width: 100%; height: 100%">
     <div id="content">
         <h1>Hello World</h1>
+        <h2 id="ratio"><h2>
     </div>
     <div style="width: 20%; height: 20%">
         <canvas id="myChart"></canvas>
     </div>
+    <div style="width: 40%; height: 40%">
+        <canvas id="myChart2"></canvas>
+    </div>
+    <div style="width: 40%; height: 40%">
+        <canvas id="myChart3"></canvas>
+    </div>
+    <div style="width: 80%; height: 80%">
+        <canvas id="myChart4"></canvas>
+    </div>
+    <button id="button">click me</button>
     <script>
+
+
     var wl = [0, 0]
-    /* The actual request will do more preprocessing... */
-    $.ajax({type: "GET", url: "sample.csv"}).done(function(d) {
-        var obj = {"win": 0, "lose": 0};
-        var arr = d.split("\n").map((x) => x.split(","));
-        arr.forEach((x) => {
-            obj[x[3]]++;
-        });
-        wl[0] = obj["win"];
-        wl[1] = obj["lose"];
+    var record = {};
+    var labelNames = [];
+    $.ajax({type: "GET", url: "/api/winrate/testName"}).done(function(d) {
+        document.getElementById("ratio").innerHTML = d['count'].toString() + "% Overall Winrate";
+    });
+
+    $.ajax({type: "GET", url: "/api/winloss/testName"}).done(function(d) {
+        wl[0] = d['win'];
+        wl[1] = d['lose'];
     }).then(() => {
         var ctx = document.getElementById("myChart");
         var myChart = new Chart(ctx, {
@@ -64,6 +77,167 @@
                 }
             }
         });
+    });
+
+    $.ajax({type: "GET", url: "/api/classresults/testName"}).done(function(d) {
+        /* Need to preserve order to match the labels, so for now we do this dirty */
+        let max = 0
+        record['gamesPlayed'] = []
+        record['gamesPlayed'][0] = (max = Math.max(max, d['warlock']['gamesPlayedAs']), d['warlock']['gamesPlayedAs']);
+        record['gamesPlayed'][1] = (max = Math.max(max, d['warrior']['gamesPlayedAs']), d['warrior']['gamesPlayedAs']);
+        record['gamesPlayed'][2] = (max = Math.max(max, d['druid']['gamesPlayedAs']), d['druid']['gamesPlayedAs']);
+        record['gamesPlayed'][3] = (max = Math.max(max, d['shaman']['gamesPlayedAs']), d['shaman']['gamesPlayedAs']);
+        record['gamesPlayed'][4] = (max = Math.max(max, d['rogue']['gamesPlayedAs']), d['rogue']['gamesPlayedAs']);
+        record['gamesPlayed'][5] = (max = Math.max(max, d['mage']['gamesPlayedAs']), d['mage']['gamesPlayedAs']);
+        record['gamesPlayed'][6] = (max = Math.max(max, d['hunter']['gamesPlayedAs']), d['hunter']['gamesPlayedAs']);
+        record['gamesPlayed'][7] = (max = Math.max(max, d['paladin']['gamesPlayedAs']), d['paladin']['gamesPlayedAs']);
+        record['gamesPlayed'][8] = (max = Math.max(max, d['priest']['gamesPlayedAs']), d['priest']['gamesPlayedAs']);
+
+        /* scale winrate to the highest play count */
+        record['winrate'] = []
+        record['winrate'][0] = (d['warlock']['gamesWonAs'] / d['warlock']['gamesPlayedAs']).toFixed(2)*max;
+        record['winrate'][1] = (d['warrior']['gamesWonAs'] / d['warrior']['gamesPlayedAs']).toFixed(2)*max;
+        record['winrate'][2] = (d['druid']['gamesWonAs'] / d['druid']['gamesPlayedAs']).toFixed(2)*max;
+        record['winrate'][3] = (d['shaman']['gamesWonAs'] / d['shaman']['gamesPlayedAs']).toFixed(2)*max;
+        record['winrate'][4] = (d['rogue']['gamesWonAs'] / d['rogue']['gamesPlayedAs']).toFixed(2)*max;
+        record['winrate'][5] = (d['mage']['gamesWonAs'] / d['mage']['gamesPlayedAs']).toFixed(2)*max;
+        record['winrate'][6] = (d['hunter']['gamesWonAs'] / d['hunter']['gamesPlayedAs']).toFixed(2)*max;
+        record['winrate'][7] = (d['paladin']['gamesWonAs'] / d['paladin']['gamesPlayedAs']).toFixed(2)*max;
+        record['winrate'][8] = (d['priest']['gamesWonAs'] / d['priest']['gamesPlayedAs']).toFixed(2)*max;
+
+        record['loserate'] = []
+        record['loserate'][0] = (d['warlock']['gamesLostAgainst'] / d['warlock']['gamesPlayedAgainst']).toFixed(2);
+        record['loserate'][1] = (d['warrior']['gamesLostAgainst'] / d['warrior']['gamesPlayedAgainst']).toFixed(2);
+        record['loserate'][2] = (d['druid']['gamesLostAgainst'] / d['druid']['gamesPlayedAgainst']).toFixed(2);
+        record['loserate'][3] = (d['shaman']['gamesLostAgainst'] / d['shaman']['gamesPlayedAgainst']).toFixed(2);
+        record['loserate'][4] = (d['rogue']['gamesLostAgainst'] / d['rogue']['gamesPlayedAgainst']).toFixed(2);
+        record['loserate'][5] = (d['mage']['gamesLostAgainst'] / d['mage']['gamesPlayedAgainst']).toFixed(2);
+        record['loserate'][6] = (d['hunter']['gamesLostAgainst'] / d['hunter']['gamesPlayedAgainst']).toFixed(2);
+        record['loserate'][7] = (d['paladin']['gamesLostAgainst'] / d['paladin']['gamesPlayedAgainst']).toFixed(2);
+        record['loserate'][8] = (d['priest']['gamesLostAgainst'] / d['priest']['gamesPlayedAgainst']).toFixed(2);
+
+        console.log(record['games']);
+    }).then(() => {
+        var ctx2 = document.getElementById("myChart2");
+        var myRadarChart = new Chart(ctx2, {
+            type: 'radar',
+            data: {
+                labels: ["Warlock", "Warrior", "Druid", "Shaman", "Rogue", "Mage", "Hunter", "Paladin", "Priest"],
+                datasets: [
+                    {
+                        label: "Games Played",
+                        backgroundColor: "rgba(179,181,198,0.2)",
+                        borderColor: "rgba(179,181,198,1)",
+                        pointBackgroundColor: "rgba(179,181,198,1)",
+                        pointBorderColor: "#fff",
+                        pointHoverBackgroundColor: "#fff",
+                        pointHoverBorderColor: "rgba(179,181,198,1)",
+                        data: record['gamesPlayed']
+                    },
+                    {
+                        label: "Win Rate",
+                        backgroundColor: "rgba(99,255,127,0.2)",
+                        borderColor: "rgba(99,255,127,1)",
+                        pointBackgroundColor: "rgba(99,255,127,1)",
+                        pointBorderColor: "#fff",
+                        pointHoverBackgroundColor: "#fff",
+                        pointHoverBorderColor: "rgba(99,255,127,1)",
+                        data: record['winrate']
+                    }
+                ]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Win Rate / Games Played Radar'
+                }
+            }
+        });
+
+        var ctx3 = document.getElementById("myChart3");
+        var myPieChart = new Chart(ctx3, {
+            type: 'pie',
+            data: {
+                labels: ["Warlock", "Warrior", "Druid", "Shaman", "Rogue", "Mage", "Hunter", "Paladin", "Priest"],
+                datasets: [{
+                    data: record['loserate'],
+                    backgroundColor: [
+                        "#9630c1",
+                        "#ed4f23",
+                        "#3eaf2a",
+                        "#775d32",
+                        "#db0618",
+                        "#0b4fbc",
+                        "#2d6633",
+                        "#e8ea60",
+                        "#f9f4f9"
+                    ],
+                    hoverBackgroundColor: [
+                        "#9630c1",
+                        "#ed4f23",
+                        "#3eaf2a",
+                        "#775d32",
+                        "#db0618",
+                        "#0b4fbc",
+                        "#2d6633",
+                        "#e8ea60",
+                        "#f9f4f9"
+                    ]
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Loss Rate Against Class'
+                }
+            }
+        });
+    });
+
+    // Make api call to get days. On server format by:
+    // games played in last year
+    // games played in last 4 weeks (month)
+    // games played in each day in last week
+    // On toggle need to display different data
+    var ctx4 = document.getElementById("myChart4");
+    var myLineChart = new Chart(ctx4, {
+        type: 'line',
+        data: {
+            labels: ["January", "February", "March", "April", "May", "June", "July"],
+            datasets: [
+                {
+                    label: "hmmm",
+                    fill: false,
+                    lineTension: 0.0,
+                    backgroundColor: "rgba(75,192,192,0.4)",
+                    borderColor: "rgba(75,192,192,1)",
+                    borderCapStyle: 'butt',
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: "rgba(75,192,192,1)",
+                    pointBackgroundColor: "#fff",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                    pointHoverBorderColor: "rgba(220,220,220,1)",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 1,
+                    pointHitRadius: 10,
+                    data: [65, 59, 80, 81, 56, 55, 40],
+                    spanGaps: false,
+                }
+            ]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Time chart'
+            }
+        }
+    });
+    $('#button').click(function(e) {
+        myLineChart.data.datasets[0].data = [20, 30, 0, 40, 50, 40, 30];
     });
     </script>
 </body>

@@ -38,7 +38,7 @@ server.route('/api/:name/')
         res.json({student: req.params.name});
     });
 
-// Return the winrate in decimal to 2 decimal places. Ex. {'count': 0.62}
+// Return the winrate in as a percent. Ex. {'count': 62.00}
 server.get('/api/winrate/:name', function(req, res) {
     let ratioArr = [];
     let ratio = "invalid";
@@ -52,14 +52,14 @@ server.get('/api/winrate/:name', function(req, res) {
         }, (err, rowc) => {
             if (!err && rowc > 0) {
                 ratio = ratioArr.reduce((acc, x) => { return x == 'win' ? acc + 1 : acc }, 0);
-                ratio = (ratio / ratioArr.length).toFixed(2);
+                ratio = (ratio / ratioArr.length).toFixed(2)*100;
             } 
             res.json({count: ratio});
         });
     });
 });
 
-// Return the number of wins and losses. Ex. {'win': 5, 'loss': 12}
+// Return the number of wins and losses. Ex. {'win': 5, 'lose': 12}
 server.get('/api/winloss/:name', function(req, res) {
     let winloss = {win: 0, lose: 0};
     db.serialize(() => {
@@ -104,6 +104,8 @@ server.get('/api/classresults/:name', function(req, res) {
         });
     });
 });
+
+// Day/Time functions here for later
 
 server.use(express.static(path.join(__dirname, 'public')));
 server.use('/scripts', express.static(path.join(__dirname, '/node_modules/chart.js/dist/')));
