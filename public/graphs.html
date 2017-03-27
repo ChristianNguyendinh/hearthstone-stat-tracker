@@ -26,7 +26,9 @@
     <div style="width: 80%; height: 80%">
         <canvas id="myChart4"></canvas>
     </div>
-    <button id="button">click me</button>
+    <button id="button1">Week</button>
+    <button id="button2">Month</button>
+    <button id="button3">Year</button>
     <script>
 
 
@@ -199,68 +201,139 @@
     // games played in last 4 weeks (month)
     // games played in each day in last week
     // On toggle need to display different data
-    var ctx4 = document.getElementById("myChart4");
-    var myLineChart = new Chart(ctx4, {
-        type: 'line',
-        data: {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
-            datasets: [
-                {
-                    label: "month",
-                    fill: false,
-                    lineTension: 0.0,
-                    backgroundColor: "rgba(75,192,192,0.4)",
-                    borderColor: "rgba(75,192,192,1)",
-                    borderCapStyle: 'butt',
-                    borderDash: [],
-                    borderDashOffset: 0.0,
-                    borderJoinStyle: 'miter',
-                    pointBorderColor: "rgba(75,192,192,1)",
-                    pointBackgroundColor: "#fff",
-                    pointBorderWidth: 1,
-                    pointHoverRadius: 5,
-                    pointHoverBackgroundColor: "rgba(75,192,192,1)",
-                    pointHoverBorderColor: "rgba(220,220,220,1)",
-                    pointHoverBorderWidth: 2,
-                    pointRadius: 1,
-                    pointHitRadius: 10,
-                    data: [65, 59, 80, 81, 56, 55, 40],
-                    spanGaps: false,
+    var dayArr = [];
+    var monthArr = [];
+    var yearArr = [];
+
+    var myData;
+
+    var myLineChart;
+
+    $.ajax({type: "GET", url: "/api/timestats/testName"}).done(function(d) {
+        dayArr = d['dayCount'];
+        monthArr = d['monthCount'];
+        yearArr = d['yearCount'];
+    }).then(() => {
+
+        var ctx4 = document.getElementById("myChart4");
+        myLineChart = new Chart(ctx4, {
+            type: 'line',
+            data: {
+                labels: ["6", "5", "4", "3", "2", "1", "0"],
+                datasets: [
+                    {
+                        label: "Days Ago",
+                        fill: false,
+                        lineTension: 0.0,
+                        backgroundColor: "rgba(75,192,192,0.4)",
+                        borderColor: "rgba(75,192,192,1)",
+                        borderCapStyle: 'butt',
+                        borderDash: [],
+                        borderDashOffset: 0.0,
+                        borderJoinStyle: 'miter',
+                        pointBorderColor: "rgba(75,192,192,1)",
+                        pointBackgroundColor: "#fff",
+                        pointBorderWidth: 1,
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                        pointHoverBorderColor: "rgba(220,220,220,1)",
+                        pointHoverBorderWidth: 2,
+                        pointRadius: 1,
+                        pointHitRadius: 10,
+                        data: dayArr,
+                        spanGaps: false,
+                    }
+                ]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Time chart'
                 },
-                {
-                    label: "day",
-                    fill: false,
-                    lineTension: 0.0,
-                    backgroundColor: "rgba(75,11,192,0.4)",
-                    borderColor: "rgba(75,11,192,1)",
-                    borderCapStyle: 'butt',
-                    borderDash: [],
-                    borderDashOffset: 0.0,
-                    borderJoinStyle: 'miter',
-                    pointBorderColor: "rgba(75,11,192,1)",
-                    pointBackgroundColor: "#fff",
-                    pointBorderWidth: 1,
-                    pointHoverRadius: 5,
-                    pointHoverBackgroundColor: "rgba(75,11,192,1)",
-                    pointHoverBorderColor: "rgba(220,220,220,1)",
-                    pointHoverBorderWidth: 2,
-                    pointRadius: 1,
-                    pointHitRadius: 10,
-                    data: [5, 5, 4],
-                    spanGaps: false,
+                scales: {
+                    xAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Days ago"
+                        }
+                    }],
+                    yAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Games Played",
+                        },
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }]
                 }
-            ]
-        },
-        options: {
-            title: {
-                display: true,
-                text: 'Time chart'
             }
-        }
+        });
     });
-    $('#button').click(function(e) {
-        myLineChart.data.datasets[0].data = [20, 30, 0, 40, 50, 40, 30];
+
+    $('#button1').click(function(e) {
+        myLineChart.config.data.datasets[0].data = dayArr;
+        myLineChart.config.data.datasets[0].label = "Days Ago";
+        myLineChart.config.data.datasets[0].backgroundColor = "rgba(75,192,192,0.4)";
+        myLineChart.config.data.datasets[0].borderColor = "rgba(75,192,192,1)";
+        myLineChart.config.data.datasets[0].pointBorderColor = "rgba(75,192,192,1)";
+        myLineChart.config.data.datasets[0].pointHoverBackgroundColor = "rgba(75,192,192,1)";
+
+        myLineChart.config.data.labels = ["6", "5", "4", "3", "2", "1", "0"];
+
+        myLineChart.options.title.display = true;
+        myLineChart.options.title.text = "Cext Chart";
+        myLineChart.options.scales.xAxes[0].scaleLabel.display = true;
+        myLineChart.options.scales.xAxes[0].scaleLabel.labelString = "Days Ago";
+        myLineChart.options.scales.yAxes[0].scaleLabel.display = true;
+        myLineChart.options.scales.yAxes[0].scaleLabel.labelString = "Games Played";
+        myLineChart.options.scales.yAxes[0].ticks.stepSize = 1;
+
+        myLineChart.update();
     });
+
+    $('#button2').click(function(e) {
+        myLineChart.config.data.datasets[0].data = monthArr;
+        myLineChart.config.data.datasets[0].label = "Days Ago";
+        myLineChart.config.data.datasets[0].backgroundColor = "rgba(255,0,0,0.4)";
+        myLineChart.config.data.datasets[0].borderColor = "rgba(255,0,0,1)";
+        myLineChart.config.data.datasets[0].pointBorderColor = "rgba(255,0,0,1)";
+        myLineChart.config.data.datasets[0].pointHoverBackgroundColor = "rgba(255,0,0,1)";
+
+        myLineChart.config.data.labels = ["27", "26", "25", "24", "23", "22", "21", "20" ,"19", "18", "17", "16", "15", "14", "13", "12", "11", "10", "9", "8", "7", "6", "5", "4", "3", "2", "1", "0"];
+
+        myLineChart.options.title.display = true;
+        myLineChart.options.title.text = "Cext Chart";
+        myLineChart.options.scales.xAxes[0].scaleLabel.display = true;
+        myLineChart.options.scales.xAxes[0].scaleLabel.labelString = "Days Ago";
+        myLineChart.options.scales.yAxes[0].scaleLabel.display = true;
+        myLineChart.options.scales.yAxes[0].scaleLabel.labelString = "Games Played";
+        myLineChart.options.scales.yAxes[0].ticks.stepSize = 1;
+
+        myLineChart.update();
+    });
+
+    $('#button3').click(function(e) {
+        myLineChart.config.data.datasets[0].data = yearArr;
+        myLineChart.config.data.datasets[0].label = "Months Ago";
+        myLineChart.config.data.datasets[0].backgroundColor = "rgba(0,255,0,0.4)";
+        myLineChart.config.data.datasets[0].borderColor = "rgba(0,255,0,1)";
+        myLineChart.config.data.datasets[0].pointBorderColor = "rgba(0,255,0,1)";
+        myLineChart.config.data.datasets[0].pointHoverBackgroundColor = "rgba(0,255,0,1)";
+
+        myLineChart.config.data.labels = ["11", "10", "9", "8", "7", "6", "5", "4", "3", "2", "1", "0"];
+
+        myLineChart.options.title.display = true;
+        myLineChart.options.title.text = "Mext Chart";
+        myLineChart.options.scales.xAxes[0].scaleLabel.display = true;
+        myLineChart.options.scales.xAxes[0].scaleLabel.labelString = "Months Ago";
+        myLineChart.options.scales.yAxes[0].scaleLabel.display = true;
+        myLineChart.options.scales.yAxes[0].scaleLabel.labelString = "Games Played";
+        myLineChart.options.scales.yAxes[0].ticks.stepSize = 1;
+
+        myLineChart.update();
+    });
+
     </script>
 </body>
 </html>

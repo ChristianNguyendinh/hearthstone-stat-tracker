@@ -108,14 +108,30 @@ server.get('/api/classresults/:name', function(req, res) {
 // Day/Time functions here for later
 server.get('/api/timestats/:name', function(req, res) {
     let dateObj = {};
-    dateObj['dayCount'] = (new Array(28)).fill(0);
-    dateObj['monthCount'] = (new Array(12)).fill(0);
+    dateObj['dayCount'] = (new Array(7)).fill(0);
+    dateObj['monthCount'] = (new Array(28)).fill(0);
+    dateObj['yearCount'] = (new Array(12)).fill(0);
     let today = new Date();
     db.serialize(() => {
         db.each('SELECT date FROM combined WHERE name = \"' + req.params.name + '\"', (err, row) => {
             if (!err) {
                 // id | name | deck | opponent | result | date
-                // ??
+                // Sat Mar 11 2017 03:15:36
+                let d = new Date(row.date);
+                let dayDiff = Math.floor(Math.abs(today - d) / 86400000);
+                let monthDiff = Math.floor(Math.abs(today - d) / 2419000000);
+                console.log(d);
+                console.log(dayDiff);
+                console.log(monthDiff);
+                if (dayDiff < 7)
+                    dateObj['dayCount'][dayDiff]++;
+
+                if (dayDiff < 28)
+                    dateObj['monthCount'][dayDiff]++;
+
+                if (monthDiff < 12)
+                    dateObj['yearCount'][monthDiff]++;
+
             } else {
                 console.log(err)
             }
