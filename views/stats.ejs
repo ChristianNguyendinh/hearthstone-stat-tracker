@@ -1,18 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="main.css">
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="/scripts/Chart.bundle.min.js"></script>
-
-    <title>Graphs</title>
+	<% include partials/head.ejs %>
 </head>
+
 <body style="width: 100%; height: 100%">
     <div id="content">
         <h1>Hello World</h1>
-        <h2 id="ratio"><h2>
+        <h2 id="ratio"></h2>
     </div>
     <div style="width: 20%; height: 20%">
         <canvas id="myChart"></canvas>
@@ -30,14 +25,15 @@
     <script>
 
 
+
     var wl = [0, 0]
     var record = {};
     var labelNames = [];
-    $.ajax({type: "GET", url: "/api/winrate/testName"}).done(function(d) {
+    $.ajax({type: "GET", url: "/api/winrate/" + "<%= name %>"}).done(function(d) {
         document.getElementById("ratio").innerHTML = d['count'].toString() + "% Overall Winrate";
     });
 
-    $.ajax({type: "GET", url: "/api/winloss/testName"}).done(function(d) {
+    $.ajax({type: "GET", url: "/api/winloss/" + "<%= name %>"}).done(function(d) {
         wl[0] = d['win'];
         wl[1] = d['lose'];
     }).then(() => {
@@ -79,7 +75,7 @@
         });
     });
 
-    $.ajax({type: "GET", url: "/api/classresults/testName"}).done(function(d) {
+    $.ajax({type: "GET", url: "/api/classresults/" + "<%= name %>"}).done(function(d) {
         /* Need to preserve order to match the labels, so for now we do this dirty */
         let max = 0
         record['gamesPlayed'] = []
@@ -207,7 +203,7 @@
 
     var myLineChart;
 
-    $.ajax({type: "GET", url: "/api/timestats/testName"}).done(function(d) {
+    $.ajax({type: "GET", url: "/api/timestats/" + "<%= name %>"}).done(function(d) {
         dayArr = d['dayCount'];
         monthArr = d['monthCount'];
         yearArr = d['yearCount'];

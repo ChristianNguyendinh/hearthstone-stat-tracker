@@ -11,15 +11,31 @@ server.use(bodyparser.urlencoded({
     extended: true
 }));
 
+server.set('view engine', 'ejs');
+server.use(express.static(path.join(__dirname, 'public')));
+server.use('/scripts', express.static(path.join(__dirname, '/node_modules/chart.js/dist/')));
+
 server.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, 'public/index.html'));
+});
 
-    /*request("http://127.0.0.1:3000/api/bob", function(error, response, body) {
-        if (error)
-            console.log(error)
-        let j = JSON.parse(body)
-        console.log(j.student);
-    });*/
+server.get('/stats/:name/', function(req, res) {
+    db.serialize(() => {
+        db.each('SELECT result FROM combined WHERE name = \"' + req.params.name + '\"', (err, row) => {}, 
+        (err, rowc) => {
+            console.log(rowc)
+            if (!err && rowc > 0) {
+                res.render('stats', {
+                    name: req.params.name
+                });
+            }
+            else {
+                res.render('notFound', {
+                    name: req.params.name
+                });
+            }
+        });
+    });
 });
 
 server.get('/graphs/', function(req, res) {
@@ -120,9 +136,7 @@ server.get('/api/timestats/:name', function(req, res) {
                 let d = new Date(row.date);
                 let dayDiff = Math.floor(Math.abs(today - d) / 86400000);
                 let monthDiff = Math.floor(Math.abs(today - d) / 2419000000);
-                console.log(d);
-                console.log(dayDiff);
-                console.log(monthDiff);
+
                 if (dayDiff < 7)
                     dateObj['dayCount'][dayDiff]++;
 
@@ -140,10 +154,6 @@ server.get('/api/timestats/:name', function(req, res) {
         });
     });
 });
-
-server.use(express.static(path.join(__dirname, 'public')));
-server.use('/scripts', express.static(path.join(__dirname, '/node_modules/chart.js/dist/')));
-
 
 server.listen(3000, function() {
     console.log("server started on port 3000");
