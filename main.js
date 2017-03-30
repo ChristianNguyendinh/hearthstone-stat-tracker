@@ -15,8 +15,8 @@ server.set('view engine', 'ejs');
 server.use(express.static(path.join(__dirname, 'public')));
 server.use('/scripts', express.static(path.join(__dirname, '/node_modules/chart.js/dist/')));
 
-server.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname, 'public/index.html'));
+server.get('/index/', function(req, res) {
+    res.render('index');
 });
 
 server.get('/stats/:name/', function(req, res) {
