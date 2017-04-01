@@ -15,8 +15,12 @@ server.set('view engine', 'ejs');
 server.use(express.static(path.join(__dirname, 'public')));
 server.use('/scripts', express.static(path.join(__dirname, '/node_modules/chart.js/dist/')));
 
-server.get('/index/', function(req, res) {
-    res.render('index');
+server.get('/index/:name', function(req, res) {
+	let users = ['christian', 'christian-arena', 'testName']
+    if (users.indexOf(req.params.name) != -1)
+    	res.render('index', { name: req.params.name });
+    else
+    	res.send("Invalid User")
 });
 
 server.get('/stats/:name/', function(req, res) {
@@ -138,13 +142,13 @@ server.get('/api/timestats/:name', function(req, res) {
                 let monthDiff = Math.floor(Math.abs(today - d) / 2419000000);
 
                 if (dayDiff < 7)
-                    dateObj['dayCount'][dayDiff]++;
+                    dateObj['dayCount'][6 - dayDiff]++;
 
                 if (dayDiff < 28)
-                    dateObj['monthCount'][dayDiff]++;
+                    dateObj['monthCount'][27 - dayDiff]++;
 
                 if (monthDiff < 12)
-                    dateObj['yearCount'][monthDiff]++;
+                    dateObj['yearCount'][11 - monthDiff]++;
 
             } else {
                 console.log(err)

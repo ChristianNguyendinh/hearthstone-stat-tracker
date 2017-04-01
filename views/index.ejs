@@ -56,7 +56,7 @@
         - login?!?!?!?! */
         $('#gameForm').submit(function(e) {
             var obj = {};
-            obj['name'] = 'testName';
+            obj['name'] = "<%= name %>";
             $('#gameForm').serializeArray().forEach(function(x) {
                 if (x.name == 'mdeck') {
                     obj['mdeck'] = x.value;
@@ -74,7 +74,7 @@
             /*$.ajax({url: "api/1"}).done(function(data) {
                 console.log(data);
             });*/
-            $.ajax({type: "POST", url: "api/1", data: data}).done(function(d) {
+            $.ajax({type: "POST", url: "../api/" + obj['name'], data: data}).done(function(d) {
                 console.log(d);
             });
 
