@@ -12,6 +12,10 @@
     <div style="width: 20%; height: 20%">
         <canvas id="myChart"></canvas>
     </div>
+    <div style="width: 40%; height: 40%;">
+        <canvas id="myBarChart1"></canvas>
+        <canvas id="myBarChart2"></canvas>
+    </div>
     <div style="width: 40%; height: 40%; display: inline-flex;">
         <canvas id="myChart2"></canvas>
         <canvas id="myChart3"></canvas>
@@ -89,6 +93,17 @@
         record['gamesPlayed'][7] = (max = Math.max(max, d['paladin']['gamesPlayedAs']), d['paladin']['gamesPlayedAs']);
         record['gamesPlayed'][8] = (max = Math.max(max, d['priest']['gamesPlayedAs']), d['priest']['gamesPlayedAs']);
 
+        record['gamesAgainst'] = []
+        record['gamesAgainst'][0] = (max = Math.max(max, d['warlock']['gamesPlayedAgainst']), d['warlock']['gamesPlayedAgainst']);
+        record['gamesAgainst'][1] = (max = Math.max(max, d['warrior']['gamesPlayedAgainst']), d['warrior']['gamesPlayedAgainst']);
+        record['gamesAgainst'][2] = (max = Math.max(max, d['druid']['gamesPlayedAgainst']), d['druid']['gamesPlayedAgainst']);
+        record['gamesAgainst'][3] = (max = Math.max(max, d['shaman']['gamesPlayedAgainst']), d['shaman']['gamesPlayedAgainst']);
+        record['gamesAgainst'][4] = (max = Math.max(max, d['rogue']['gamesPlayedAgainst']), d['rogue']['gamesPlayedAgainst']);
+        record['gamesAgainst'][5] = (max = Math.max(max, d['mage']['gamesPlayedAgainst']), d['mage']['gamesPlayedAgainst']);
+        record['gamesAgainst'][6] = (max = Math.max(max, d['hunter']['gamesPlayedAgainst']), d['hunter']['gamesPlayedAgainst']);
+        record['gamesAgainst'][7] = (max = Math.max(max, d['paladin']['gamesPlayedAgainst']), d['paladin']['gamesPlayedAgainst']);
+        record['gamesAgainst'][8] = (max = Math.max(max, d['priest']['gamesPlayedAgainst']), d['priest']['gamesPlayedAgainst']);
+
         /* scale winrate to the highest play count */
         record['winrate'] = []
         record['winrate'][0] = (d['warlock']['gamesWonAs'] / d['warlock']['gamesPlayedAs']).toFixed(2)*max;
@@ -114,6 +129,92 @@
 
         console.log(record['games']);
     }).then(() => {
+
+        var ctx6 = document.getElementById("myBarChart1");
+        var myBarChart1 = new Chart(ctx6, {
+            type: 'bar',
+            data: {
+                labels: ["Warlock", "Warrior", "Druid", "Shaman", "Rogue", "Mage", "Hunter", "Paladin", "Priest"],
+                datasets: [{
+                    data: record['gamesPlayed'],
+                    backgroundColor: [
+                        "#9630c1",
+                        "#ed4f23",
+                        "#3eaf2a",
+                        "#775d32",
+                        "#db0618",
+                        "#0b4fbc",
+                        "#2d6633",
+                        "#e8ea60",
+                        "#f9f4f9"
+                    ],
+                    hoverBackgroundColor: [
+                        "#9630c1",
+                        "#ed4f23",
+                        "#3eaf2a",
+                        "#775d32",
+                        "#db0618",
+                        "#0b4fbc",
+                        "#2d6633",
+                        "#e8ea60",
+                        "#f9f4f9"
+                    ]
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Games Played As'
+                },
+                legend: {
+                    display: false
+                }
+            }
+        });
+
+        var ctx7 = document.getElementById("myBarChart2");
+        var myBarChart2 = new Chart(ctx7, {
+            type: 'bar',
+            data: {
+                labels: ["Warlock", "Warrior", "Druid", "Shaman", "Rogue", "Mage", "Hunter", "Paladin", "Priest"],
+                datasets: [{
+                    data: record['gamesAgainst'],
+                    backgroundColor: [
+                        "#9630c1",
+                        "#ed4f23",
+                        "#3eaf2a",
+                        "#775d32",
+                        "#db0618",
+                        "#0b4fbc",
+                        "#2d6633",
+                        "#e8ea60",
+                        "#f9f4f9"
+                    ],
+                    hoverBackgroundColor: [
+                        "#9630c1",
+                        "#ed4f23",
+                        "#3eaf2a",
+                        "#775d32",
+                        "#db0618",
+                        "#0b4fbc",
+                        "#2d6633",
+                        "#e8ea60",
+                        "#f9f4f9"
+                    ]
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Games Played Against'
+                },
+                legend: {
+                    display: false
+                }
+            }
+        });
+
+
         var ctx2 = document.getElementById("myChart2");
         var myRadarChart = new Chart(ctx2, {
             type: 'radar',
@@ -123,7 +224,7 @@
                     {
                         label: "Games Played",
                         backgroundColor: "rgba(179,181,198,0.2)",
-                        borderColor: "rgba(179,181,198,1)",
+                        borderColor: "rgba(179,181,198,0.5)",
                         pointBackgroundColor: "rgba(179,181,198,1)",
                         pointBorderColor: "#fff",
                         pointHoverBackgroundColor: "#fff",
@@ -131,7 +232,7 @@
                         data: record['gamesPlayed']
                     },
                     {
-                        label: "Win Rate",
+                        label: "Games Won",
                         backgroundColor: "rgba(99,255,127,0.2)",
                         borderColor: "rgba(99,255,127,1)",
                         pointBackgroundColor: "rgba(99,255,127,1)",
