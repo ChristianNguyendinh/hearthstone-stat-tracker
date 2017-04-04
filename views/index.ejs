@@ -71,9 +71,6 @@
             var data = obj;
             console.log(data);
             /* Post here when adding a game state. When render stats server will req and load new page with data*/
-            /*$.ajax({url: "api/1"}).done(function(data) {
-                console.log(data);
-            });*/
             $.ajax({type: "POST", url: "../api/" + obj['name'], data: data}).done(function(d) {
                 console.log(d);
             });
