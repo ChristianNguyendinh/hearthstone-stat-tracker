@@ -7,54 +7,122 @@
 <body>
     <div class="container" id="content" style="width:100%; height:100%;">
         <h1>Hello World</h1>
-        <div class="col-xs-6">
-            <form id="testForm">
-                <div id="row">
-                    <label class="col-xs-4 nopadding">
-                        <input style="visibility:hidden; position:absolute;" type="radio" name="class" value="druid" />
-                        <img class="img-responsive" src="../../images/class_portraits/warrior.png"/>
+        <div class="col-xs-8">
+            <form id="mainForm" name="myform">
+                <!-- Your Class -->
+                <div class="row">
+                    <h2>Your Class</h2>
+                </div>
+                <div class="row">
+                    <label class="col-xs-4 mypadding">
+                        <input class="hidden-input" type="radio" name="myClass" value="warrior" />
+                        <img class="img-responsive" src="/images/class_portraits/warrior.png"/>
                     </label>
-                    <label class="col-xs-4 nopadding">
-                        <input style="visibility:hidden; position:absolute;" type="radio" name="class" value="warlock" />
-                        <img class="img-responsive" src="../../images/class_portraits/warlock.png"/>
+                    <label class="col-xs-4 mypadding">
+                        <input class="hidden-input" type="radio" name="myClass" value="warlock" />
+                        <img class="img-responsive" src="/images/class_portraits/warlock.png"/>
                     </label>
-                    <label class="col-xs-4 nopadding">
-                        <input style="visibility:hidden; position:absolute;" type="radio" name="class" value="warlock" />
-                        <img class="img-responsive" src="../../images/class_portraits/paladin.png"/>
+                    <label class="col-xs-4 mypadding">
+                        <input class="hidden-input" type="radio" name="myClass" value="paladin" />
+                        <img class="img-responsive" src="/images/class_portraits/paladin.png"/>
                     </label>
                 </div>
 
-                <div id="row">
-                    <label class="col-xs-4 nopadding">
-                        <input style="visibility:hidden; position:absolute;" type="radio" name="class" value="warlock" />
-                        <img class="img-responsive" src="../../images/class_portraits/shaman.png"/>
+                <div class="row">
+                    <label class="col-xs-4 mypadding">
+                        <input class="hidden-input" type="radio" name="myClass" value="shaman" />
+                        <img class="img-responsive" src="/images/class_portraits/shaman.png"/>
                     </label>
-                    <label class="col-xs-4 nopadding">
-                        <input style="visibility:hidden; position:absolute;" type="radio" name="class" value="warlock" />
-                        <img class="img-responsive" src="../../images/class_portraits/priest.png"/>
+                    <label class="col-xs-4 mypadding">
+                        <input class="hidden-input" type="radio" name="myClass" value="priest" />
+                        <img class="img-responsive" src="/images/class_portraits/priest.png"/>
                     </label>
-                    <label class="col-xs-4 nopadding">
-                        <input style="visibility:hidden; position:absolute;" type="radio" name="class" value="warlock" />
-                        <img class="img-responsive" src="../../images/class_portraits/rogue.png"/>
+                    <label class="col-xs-4 mypadding">
+                        <input class="hidden-input" type="radio" name="myClass" value="rogue" />
+                        <img class="img-responsive" src="/images/class_portraits/rogue.png"/>
                     </label>
                 </div>
 
-                <div id="row">
-                    <label class="col-xs-4 nopadding">
-                        <input style="visibility:hidden; position:absolute;" type="radio" name="class" value="warlock" />
-                        <img class="img-responsive" src="../../images/class_portraits/hunter.png"/>
+                <div class="row">
+                    <label class="col-xs-4 mypadding">
+                        <input class="hidden-input" type="radio" name="myClass" value="hunter" />
+                        <img class="img-responsive" src="/images/class_portraits/hunter.png"/>
                     </label>
-                    <label class="col-xs-4 nopadding">
-                        <input style="visibility:hidden; position:absolute;" type="radio" name="class" value="warlock" />
-                        <img class="img-responsive" src="../../images/class_portraits/mage.png"/>
+                    <label class="col-xs-4 mypadding">
+                        <input class="hidden-input" type="radio" name="myClass" value="mage" />
+                        <img class="img-responsive" src="/images/class_portraits/mage.png"/>
                     </label>
-                    <label class="col-xs-4 nopadding">
-                        <input style="visibility:hidden; position:absolute;" type="radio" name="class" value="warlock" />
-                        <img class="img-responsive" src="../../images/class_portraits/druid.png"/>
+                    <label class="col-xs-4 mypadding">
+                        <input class="hidden-input" type="radio" name="myClass" value="druid" />
+                        <img class="img-responsive" src="/images/class_portraits/druid.png"/>
                     </label>
                 </div>
-                
-                <input type="submit" value="test">
+
+                <!-- Their Class -->
+                <div class="row">
+                    <h2>Their Class</h2>
+                </div>
+                <div class="row">
+                    <label class="col-xs-4 mypadding">
+                        <input class="hidden-input" type="radio" name="theirClass" value="warrior" />
+                        <img class="img-responsive" src="/images/class_portraits/warrior.png"/>
+                    </label>
+                    <label class="col-xs-4 mypadding">
+                        <input class="hidden-input" type="radio" name="theirClass" value="warlock" />
+                        <img class="img-responsive" src="/images/class_portraits/warlock.png"/>
+                    </label>
+                    <label class="col-xs-4 mypadding">
+                        <input class="hidden-input" type="radio" name="theirClass" value="paladin" />
+                        <img class="img-responsive" src="/images/class_portraits/paladin.png"/>
+                    </label>
+                </div>
+
+                <div class="row">
+                    <label class="col-xs-4 mypadding">
+                        <input class="hidden-input" type="radio" name="theirClass" value="shaman" />
+                        <img class="img-responsive" src="/images/class_portraits/shaman.png"/>
+                    </label>
+                    <label class="col-xs-4 mypadding">
+                        <input class="hidden-input" type="radio" name="theirClass" value="priest" />
+                        <img class="img-responsive" src="/images/class_portraits/priest.png"/>
+                    </label>
+                    <label class="col-xs-4 mypadding">
+                        <input class="hidden-input" type="radio" name="theirClass" value="rogue" />
+                        <img class="img-responsive" src="/images/class_portraits/rogue.png"/>
+                    </label>
+                </div>
+
+                <div class="row">
+                    <label class="col-xs-4 mypadding">
+                        <input class="hidden-input" type="radio" name="theirClass" value="hunter" />
+                        <img class="img-responsive" src="/images/class_portraits/hunter.png"/>
+                    </label>
+                    <label class="col-xs-4 mypadding">
+                        <input class="hidden-input" type="radio" name="theirClass" value="mage" />
+                        <img class="img-responsive" src="/images/class_portraits/mage.png"/>
+                    </label>
+                    <label class="col-xs-4 mypadding">
+                        <input class="hidden-input" type="radio" name="theirClass" value="druid" />
+                        <img class="img-responsive" src="/images/class_portraits/druid.png"/>
+                    </label>
+                </div>
+
+                <!-- Win/Loss -->
+                <div class="row" id="win-loss">
+                    <label class="col-xs-4 mypadding">
+                        <input class="hidden-input" type="radio" name="result" value="win" />
+                        <img class="img-responsive" src="/images/victory.png"/>
+                    </label>
+                    <label class="col-xs-4 mypadding">
+                        <input class="hidden-input" type="radio" name="result" value="lose" />
+                        <img class="img-responsive" src="/images/defeat.png"/>
+                    </label>
+                </div>
+
+                <!-- Submit -->
+                <div class="row">
+                    <input type="submit" value="test">
+                </div>
             </form>
         </div>
 
@@ -116,12 +184,19 @@
 
         // var chartData = {'winloss': [0, 0], 'classAgainst': {"warlock": 0, "warrior": 0, "druid": 0, "shaman": 0, "rogue": 0, "mage": 0, "hunter": 0, "paladin": 0, "priest": 0}};
 
-        // $('#testForm').submit(function(e) {
-        //     $('#testForm').serializeArray().forEach(function(x) {
-        //         console.log(x);
-        //     });
-        //     e.preventDefault();
-        // });
+        $('#mainForm').submit(function(e) {
+            // need to validate
+            $('#mainForm').serializeArray().forEach(function(x) {
+                console.log(x);
+            });
+
+            var buttons = document.getElementsByClassName("hidden-input");
+            for(var i = 0; i < buttons.length; i++) {
+                buttons[i].checked = false;
+            }
+            
+            e.preventDefault();
+        });
 
         // $('#gameForm').submit(function(e) {
         //     var obj = {};

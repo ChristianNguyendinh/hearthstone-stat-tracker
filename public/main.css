@@ -8,15 +8,25 @@ label > input + img {
 }
 
 label > input:checked + img {
-	filter: brightness(175%);
-	box-shadow: 0px 0px 15px 5px #888;
+	filter: brightness(200%);
+	box-shadow: 0px 0px 15px 5px #444;
 }
 
 h1 {
 	color: red;
 }
 
-.nopadding {
-   padding: 0 !important;
+#win-loss > label > input:checked + img {
+	filter: brightness(200%);
+	box-shadow: none;
+}
+
+.mypadding {
+   padding: 1px !important;
    margin: 0 !important;
+}
+
+.hidden-input {
+	visibility: collapse; 
+	position: absolute;
 }
