@@ -133,6 +133,7 @@
 
         <div class="row">
             <h2 id="displayMessage" style="color: green; opacity: 0">Game Added!</h2>
+            <h2 id="errorMessage" style="color: red; opacity: 0">Need all fields to be filled</h2>
         </div>
 
         <div class="row" style="background-color: white">
@@ -160,6 +161,8 @@
         var chartData = {'winloss': [0, 0], 'classAgainst': {"warlock": 0, "warrior": 0, "druid": 0, "shaman": 0, "rogue": 0, "mage": 0, "hunter": 0, "paladin": 0, "priest": 0}};
 
         $('#mainForm').submit(function(e) {
+
+            var count = 0;
             var obj = {};
             obj['name'] = "<%= name %>";
             $('#mainForm').serializeArray().forEach(function(x) {
@@ -172,11 +175,25 @@
                     obj['result'] = x.value;
                     x.value == 'win' ? chartData['winloss'][0]++ : chartData['winloss'][1]++;;
                 }
+                count++;
             });
+
+            if (count == 3) {
+                // show game added
+                $('#displayMessage').animate({opacity:1}, 1500, function() {
+                    $('#displayMessage').animate({opacity:0}, 1500);
+                });
+            } else {
+                // error
+                $('#errorMessage').animate({opacity:1}, 1500, function() {
+                    $('#errorMessage').animate({opacity:0}, 1500);
+                });
+                e.preventDefault();
+                return;
+            }
 
             obj['date'] = (new Date()).toString().split(" G")[0];
             console.log(obj);
-
 
             // clear button select
             var buttons = document.getElementsByClassName("hidden-input");
@@ -189,11 +206,6 @@
             // $.ajax({type: "POST", url: "../api/" + obj['name'], data: data}).done(function(d) {
             //     console.log(d);
             // });
-
-            // show game added
-            $('#displayMessage').animate({opacity:1}, 1500, function() {
-                $('#displayMessage').animate({opacity:0}, 1500);
-            });
 
             donutChart.config.data.datasets[0].data = chartData['winloss'];
             barChart.config.data.datasets[0].data = Object.values(chartData['classAgainst']);
