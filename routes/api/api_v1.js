@@ -103,6 +103,25 @@ exports.timeStats = function(req, res) {
     });
 };
 
+exports.stats = function(req, res) {
+    db.serialize(() => {
+        db.each('SELECT result FROM combined WHERE name = \"' + req.params.name + '\"', (err, row) => {}, 
+        (err, rowc) => {
+            console.log(rowc)
+            if (!err && rowc > 0) {
+                res.render('stats', {
+                    name: req.params.name
+                });
+            }
+            else {
+                res.render('notFound', {
+                    name: req.params.name
+                });
+            }
+        });
+    });
+}
+
 addGame = function(data) {
     db.serialize(() => {
         console.log('INSERT INTO combined (name, deck, opponent, result, date) VALUES ("' + 

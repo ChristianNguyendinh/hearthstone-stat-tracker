@@ -27,24 +27,7 @@ server.get('/index/:name', function(req, res) {
     	res.send("Invalid User")
 });
 
-server.get('/stats/:name/', function(req, res) {
-    db.serialize(() => {
-        db.each('SELECT result FROM combined WHERE name = \"' + req.params.name + '\"', (err, row) => {}, 
-        (err, rowc) => {
-            console.log(rowc)
-            if (!err && rowc > 0) {
-                res.render('stats', {
-                    name: req.params.name
-                });
-            }
-            else {
-                res.render('notFound', {
-                    name: req.params.name
-                });
-            }
-        });
-    });
-});
+server.get('/stats/:name/', routes.api_v1.stats);
 
 server.get('/graphs/', function(req, res) {
     res.sendFile(path.join(__dirname, 'public/graphs.html'));
