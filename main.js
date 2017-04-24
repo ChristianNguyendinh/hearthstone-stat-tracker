@@ -74,6 +74,6 @@ server.get('/api/v2/test/:name', routes.api_v2.test);
 
 server.set('port', (process.env.PORT || 3000));
 server.listen(server.get('port'), function() {
-    console.log("Server started..." + newDate().toString());
+    console.log("Server started... - " + new Date().toString());
 });
 
