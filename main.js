@@ -5,6 +5,7 @@ var request = require('request');
 var bodyparser = require('body-parser');
 var routes = require('./routes/routes.js');
 
+
 server.use(bodyparser.json());
 server.use(bodyparser.urlencoded({
     extended: true
@@ -71,7 +72,8 @@ server.get('/api/v1/timestats/:name', routes.api_v1.timeStats);
 // Test for postgres
 server.get('/api/v2/test/:name', routes.api_v2.test);
 
-server.listen(3000, function() {
-    console.log("server started on port 3000");
+server.set('port', (process.env.PORT || 3000));
+server.listen(server.get('port'), function() {
+    console.log("Server started..." + newDate().toString());
 });
 
