@@ -14,6 +14,10 @@ server.set('view engine', 'ejs');
 server.use(express.static(path.join(__dirname, 'public')));
 server.use('/scripts', express.static(path.join(__dirname, '/node_modules/chart.js/dist/')));
 
+server.get('/', function(req, res) {
+    res.send("Greetings Traveler");
+});
+
 server.get('/index/:name', function(req, res) {
 	let users = ['christian', 'christian-arena', 'testName']
     if (users.indexOf(req.params.name) != -1)
