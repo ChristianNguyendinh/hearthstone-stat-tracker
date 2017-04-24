@@ -33,11 +33,11 @@
     var wl = [0, 0]
     var record = {};
     var labelNames = [];
-    $.ajax({type: "GET", url: "/api/winrate/" + "<%= name %>"}).done(function(d) {
+    $.ajax({type: "GET", url: "/api/v1/winrate/" + "<%= name %>"}).done(function(d) {
         document.getElementById("ratio").innerHTML = d['count'].toString() + "% Overall Winrate";
     });
 
-    $.ajax({type: "GET", url: "/api/winloss/" + "<%= name %>"}).done(function(d) {
+    $.ajax({type: "GET", url: "/api/v1/winloss/" + "<%= name %>"}).done(function(d) {
         wl[0] = d['win'];
         wl[1] = d['lose'];
     }).then(() => {
@@ -79,7 +79,7 @@
         });
     });
 
-    $.ajax({type: "GET", url: "/api/classresults/" + "<%= name %>"}).done(function(d) {
+    $.ajax({type: "GET", url: "/api/v1/classresults/" + "<%= name %>"}).done(function(d) {
         /* Need to preserve order to match the labels, so for now we do this dirty */
         let max = 0
         record['gamesPlayed'] = []
@@ -127,7 +127,7 @@
         record['loserate'][7] = (d['paladin']['gamesLostAgainst'] / d['paladin']['gamesPlayedAgainst']).toFixed(2);
         record['loserate'][8] = (d['priest']['gamesLostAgainst'] / d['priest']['gamesPlayedAgainst']).toFixed(2);
 
-        console.log(record['games']);
+        //console.log(record['games']);
     }).then(() => {
 
         var ctx6 = document.getElementById("myBarChart1");
@@ -304,7 +304,7 @@
 
     var myLineChart;
 
-    $.ajax({type: "GET", url: "/api/timestats/" + "<%= name %>"}).done(function(d) {
+    $.ajax({type: "GET", url: "/api/v1/timestats/" + "<%= name %>"}).done(function(d) {
         dayArr = d['dayCount'];
         monthArr = d['monthCount'];
         yearArr = d['yearCount'];
