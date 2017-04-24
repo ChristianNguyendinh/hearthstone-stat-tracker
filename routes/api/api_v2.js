@@ -1,5 +1,5 @@
 const pg = require('pg');
-const conString = 'postgres://<user>:<pass>@localhost:5432/<dbname>'
+const conString = process.env.DATABASE_URL || 'postgres://localhost:5432/christian';
 
 exports.test = (req, res) => {
     pg.connect(conString, (err, client, done) => {
