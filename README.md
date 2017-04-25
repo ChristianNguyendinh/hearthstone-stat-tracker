@@ -1,5 +1,6 @@
 hallo  
-- set up adding data to db  
-- set up api  
-- work on frontend skeleton  
-- make sure data is good  
+  
+learn D3 + implement it somehow  
+have users choose a deck instead of class?  
+front end design hmm...  
+login stuff  
