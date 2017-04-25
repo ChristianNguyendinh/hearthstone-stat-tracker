@@ -5,6 +5,8 @@ var request = require('request');
 var bodyparser = require('body-parser');
 var routes = require('./routes/routes.js');
 
+// temp until we figure other things out
+var users = ['christian', 'christian-arena', 'testName']
 
 server.use(bodyparser.json());
 server.use(bodyparser.urlencoded({
@@ -20,14 +22,18 @@ server.get('/', function(req, res) {
 });
 
 server.get('/index/:name', function(req, res) {
-	let users = ['christian', 'christian-arena', 'testName']
     if (users.indexOf(req.params.name) != -1)
     	res.render('index', { name: req.params.name });
     else
     	res.send("Invalid User")
 });
 
-server.get('/stats/:name/', routes.api_v1.stats);
+server.get('/stats/:name/', function(req, res) {
+    if (users.indexOf(req.params.name) != -1)
+    	res.render('stats', { name: req.params.name });
+    else
+    	res.send("Invalid User")
+});
 
 server.get('/graphs/', function(req, res) {
     res.sendFile(path.join(__dirname, 'public/graphs.html'));
@@ -54,6 +60,22 @@ server.get('/api/v1/timestats/:name', routes.api_v1.timeStats);
 
 // Test for postgres
 server.get('/api/v2/test/:name', routes.api_v2.test);
+
+server.post('/api/v2/:name/', routes.api_v2.postData);
+
+// Return the winrate in as a percent. Ex. {'count': 62.00}
+server.get('/api/v2/winrate/:name', routes.api_v2.winRate);
+
+// Return the number of wins and losses. Ex. {'win': 5, 'lose': 12}
+server.get('/api/v2/winloss/:name', routes.api_v2.winLoss);
+
+// Returns json data about match records against each class. 
+// Ex. {... 'warlock': {'gamesWonAs': 4, 'gamesPlayedAs': 5, 'gamesLostAgainst': 2, 'gamesPlayedAgainst': 7}, ...}
+server.get('/api/v2/classresults/:name', routes.api_v2.classResults);
+
+// Day/Time functions here for later
+server.get('/api/v2/timestats/:name', routes.api_v2.timeStats);
+
 
 server.set('port', (process.env.PORT || 3000));
 server.listen(server.get('port'), function() {
