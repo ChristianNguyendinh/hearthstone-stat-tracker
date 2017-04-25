@@ -33,11 +33,11 @@
     var wl = [0, 0]
     var record = {};
     var labelNames = [];
-    $.ajax({type: "GET", url: "/api/v1/winrate/" + "<%= name %>"}).done(function(d) {
+    $.ajax({type: "GET", url: "/api/v2/winrate/" + "<%= name %>"}).done(function(d) {
         document.getElementById("ratio").innerHTML = d['count'].toString() + "% Overall Winrate";
     });
 
-    $.ajax({type: "GET", url: "/api/v1/winloss/" + "<%= name %>"}).done(function(d) {
+    $.ajax({type: "GET", url: "/api/v2/winloss/" + "<%= name %>"}).done(function(d) {
         wl[0] = d['win'];
         wl[1] = d['lose'];
     }).then(() => {
@@ -79,7 +79,7 @@
         });
     });
 
-    $.ajax({type: "GET", url: "/api/v1/classresults/" + "<%= name %>"}).done(function(d) {
+    $.ajax({type: "GET", url: "/api/v2/classresults/" + "<%= name %>"}).done(function(d) {
         /* Need to preserve order to match the labels, so for now we do this dirty */
         let max = 0
         record['gamesPlayed'] = []
@@ -304,7 +304,7 @@
 
     var myLineChart;
 
-    $.ajax({type: "GET", url: "/api/v1/timestats/" + "<%= name %>"}).done(function(d) {
+    $.ajax({type: "GET", url: "/api/v2/timestats/" + "<%= name %>"}).done(function(d) {
         dayArr = d['dayCount'];
         monthArr = d['monthCount'];
         yearArr = d['yearCount'];

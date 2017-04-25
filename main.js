@@ -43,25 +43,17 @@ server.get('/graphs/', function(req, res) {
 
 server.post('/api/v1/:name/', routes.api_v1.postData);
 
-// Return the winrate in as a percent. Ex. {'count': 62.00}
 server.get('/api/v1/winrate/:name', routes.api_v1.winRate);
 
-// Return the number of wins and losses. Ex. {'win': 5, 'lose': 12}
 server.get('/api/v1/winloss/:name', routes.api_v1.winLoss);
 
-// Returns json data about match records against each class. 
-// Ex. {... 'warlock': {'gamesWonAs': 4, 'gamesPlayedAs': 5, 'gamesLostAgainst': 2, 'gamesPlayedAgainst': 7}, ...}
 server.get('/api/v1/classresults/:name', routes.api_v1.classResults);
 
-// Day/Time functions here for later
 server.get('/api/v1/timestats/:name', routes.api_v1.timeStats);
 
 ////////// API Version 2 : POSTGRES ////////////////////
 
-// Test for postgres
-server.get('/api/v2/test/:name', routes.api_v2.test);
-
-server.post('/api/v2/:name/', routes.api_v2.postData);
+server.post('/api/v2/game/:name/', routes.api_v2.postData);
 
 // Return the winrate in as a percent. Ex. {'count': 62.00}
 server.get('/api/v2/winrate/:name', routes.api_v2.winRate);
