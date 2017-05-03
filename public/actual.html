@@ -9,7 +9,9 @@
     
     <style>
         rect {
-            fill: steelblue;
+            stroke: black;
+            stroke-width: 1;
+            stroke-opacity: 0.5;
         }
     </style>
 
@@ -31,7 +33,7 @@
 
         // make axis objects
         var xAxis = d3.axisBottom(scaleX);
-        var yAxis = d3.axisLeft(scaleY);
+        var yAxis = d3.axisLeft(scaleY).tickFormat("");
 
         // select group inside of content for the chart
         var chart = d3.select("#content")
@@ -41,28 +43,28 @@
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         var data = [
-            {name: 'warlock', value: 5},
-            {name: 'warrior', value: 8},
-            {name: 'rogue', value: 0},
-            {name: 'priest', value: 0},
-            {name: 'shaman', value: 2},
-            {name: 'paladin', value: 3},
-            {name: 'mage', value: 4},
-            {name: 'hunter', value: 0},
-            {name: 'druid', value: 5}
+            {name: 'warlock', value: 5, color: 'purple', image: '/images/icons/icon_warlock.png'},
+            {name: 'warrior', value: 8, color: 'maroon', image: '/images/icons/icon_warrior.png'},
+            {name: 'rogue', value: 1, color: 'tomato', image: '/images/icons/icon_rogue.png'},
+            {name: 'priest', value: 2, color: 'oldlace', image: '/images/icons/icon_priest.png'},
+            {name: 'shaman', value: 2, color: 'teal', image: '/images/icons/icon_shaman.png'},
+            {name: 'paladin', value: 3, color: 'khaki', image: '/images/icons/icon_paladin.png'},
+            {name: 'mage', value: 4, color: 'navy', image: '/images/icons/icon_mage.png'},
+            {name: 'hunter', value: 6, color: 'green', image: '/images/icons/icon_hunter.png'},
+            {name: 'druid', value: 5, color: 'sienna', image: '/images/icons/icon_druid.png'},
         ];
 
         var data1 = [
-            {name: 'warlock', value: 5},
-            {name: 'warrior', value: 8},
-            {name: 'rogue', value: 0},
-            {name: 'priest', value: 0},
-            {name: 'shaman', value: 2},
-            {name: 'paladin', value: 3},
-            {name: 'mage', value: 4},
-            {name: 'hunter', value: 10},
-            {name: 'druid', value: 5},
-            {name: 'dumbo', value: 1}
+            {name: 'warlock', value: 5, color: 'purple'},
+            {name: 'warrior', value: 8, color: 'maroon'},
+            {name: 'rogue', value: 3, color: 'red'},
+            {name: 'priest', value: 1, color: 'grey'},
+            {name: 'shaman', value: 2, color: 'sienna'},
+            {name: 'paladin', value: 3, color: 'yellow'},
+            {name: 'mage', value: 4, color: 'blue'},
+            {name: 'hunter', value: 15, color: 'green'},
+            {name: 'druid', value: 5, color: 'purple'},
+            {name: 'dumbo', value: 5, color: 'pink'}
         ];
 
         // Set the domain for the scales
@@ -71,15 +73,24 @@
 
         // Append the x axis 
         chart.append("g")
-                .attr("class", "x axis")
-                .attr("transform", "translate(0," + height + ")")
-                .call(xAxis);
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
 
         // Append the Y axis
         chart.append("g")
             .attr("class", "y axis")
             .attr("transform", "translate(-2,0)")
             .call(yAxis);
+
+        chart.select(".y").selectAll(".tick")
+            .data(data)
+            .append("svg:image")
+                .attr("width", 38)
+                .attr("height", 37)
+                .attr("y", -20)
+                .attr("x", -50)
+                .attr("xlink:href", function(d) { return d.image });
 
         // create the bar chart
         chart.selectAll("rect")
@@ -88,7 +99,8 @@
             .append("rect")
                 .attr("y", function(d, i) { return scaleY(d.name) })
                 .attr("height", scaleY.bandwidth())
-                .attr("width", function(d, i) { return scaleX(d.value) });
+                .attr("width", function(d, i) { return scaleX(d.value) })
+                .style("fill", function(d) { return d.color });
 
         // update
         document.getElementById("button").onclick = function(e) {
@@ -107,7 +119,8 @@
                 .append("rect")
                 .attr("y", function(d, i) { return scaleY(d.name) })
                 .attr("height", scaleY.bandwidth())
-                .attr("width", function(d, i) { return scaleX(d.value) });
+                .attr("width", function(d, i) { return scaleX(d.value) })
+                .style("fill", function(d) { return d.color });
 
             // remove any removed nodes
             r.exit().remove();
@@ -116,7 +129,8 @@
             r.transition().duration(1000)
                 .attr("y", function(d, i) { return scaleY(d.name) })
                 .attr("height", scaleY.bandwidth())
-                .attr("width", function(d, i) { return scaleX(d.value) });
+                .attr("width", function(d, i) { return scaleX(d.value) })
+                .style("fill", function(d) { return d.color });
 
             // remove old axis
             chart.selectAll(".axis").remove()
@@ -131,7 +145,6 @@
                 .attr("class", "y axis")
                 .attr("transform", "translate(-2,0)")
                 .call(yAxis);
-
         }
     </script>
 </body>
