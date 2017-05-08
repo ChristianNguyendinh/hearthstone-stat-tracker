@@ -25,16 +25,16 @@ server.get('/', function(req, res) {
 
 server.get('/index/:name', function(req, res) {
     if (users.indexOf(req.params.name) != -1)
-    	res.render('index', { name: req.params.name });
+        res.render('index', { name: req.params.name });
     else
-    	res.send("Invalid User")
+        res.send("Invalid User")
 });
 
 server.get('/stats/:name/', function(req, res) {
     if (users.indexOf(req.params.name) != -1)
-    	res.render('stats', { name: req.params.name });
+        res.render('stats', { name: req.params.name });
     else
-    	res.send("Invalid User")
+        res.send("Invalid User")
 });
 
 server.get('/graphs/', function(req, res) {
@@ -47,7 +47,7 @@ server.post('/msg/', function(req, res) {
 });
 
 server.get('/msg/', function(req, res) {
-	console.log("Asdffff")
+    console.log("Asdffff")
     res.send("asdf");
 });
 
