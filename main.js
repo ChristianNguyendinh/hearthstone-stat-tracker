@@ -15,7 +15,9 @@ server.use(bodyparser.urlencoded({
 
 server.set('view engine', 'ejs');
 server.use(express.static(path.join(__dirname, 'public')));
+// temp for now
 server.use('/scripts', express.static(path.join(__dirname, '/node_modules/chart.js/dist/')));
+server.use('/scripts', express.static(path.join(__dirname, '/node_modules/d3-tip/')));
 
 server.get('/', function(req, res) {
     res.send("Greetings Traveler");
@@ -37,6 +39,16 @@ server.get('/stats/:name/', function(req, res) {
 
 server.get('/graphs/', function(req, res) {
     res.sendFile(path.join(__dirname, 'public/graphs.html'));
+});
+
+server.post('/msg/', function(req, res) {
+    console.log(req.body.message);
+    res.send("good");
+});
+
+server.get('/msg/', function(req, res) {
+	console.log("Asdffff")
+    res.send("asdf");
 });
 
 ////////// API Version 1 : SQLITE3 ////////////////////
