@@ -7,6 +7,7 @@
     </script>
 
     <style>
+        /* Bars for bar chart*/
         rect {
             stroke: black;
             stroke-width: 1;
@@ -43,8 +44,33 @@
             top: 40%;
             left: -1vw;
         }
+
+        /* Title for bar chart*/
         .title {
             font-size: 3vw;
+        }
+
+        /* Tool tip container for donut chart */
+        .tooltipContainer {
+            fill: none;
+            stroke: #222; 
+            stroke-width:3;
+            color: #333; 
+            display: none;
+            height: 120px;
+            width: 120px;
+        }
+
+        /* Text for donut chart tool tip */
+        .tooltipText {
+            font-size: 48px;
+            display: none;
+        }
+
+        /* Pie chart hover */
+        path:hover {
+            stroke: #2f2f2f; 
+            stroke-width: 3;
         }
 
     </style>
@@ -184,9 +210,10 @@
 
         <div class="row">
             <div class="col-xs-4">
+                <svg id="pieChart"></svg>
             </div>
             <div class="col-xs-8">
-                <svg id="chart"></svg>
+                <svg id="barChart"></svg>
             </div>
         </div>
 

@@ -8,44 +8,24 @@
     <script src="/scripts/index.js" type="text/javascript"></script>
     
     <style>
-        rect {
-            stroke: black;
-            stroke-width: 1;
-            stroke-opacity: 0.5;
+        .tooltipContainer {
+            fill: none;
+            stroke: #2f2f2f; 
+            stroke-width:3;
+            color: #333; 
+            display: none;
+            height: 120px;
+            width: 120px;
         }
 
-        rect:hover {
-            stroke: black;
-            stroke-width: 2;
-            stroke-opacity: 1;
+        .tooltipText {
+            font-size: 48px;
+            display: none;
         }
 
-        /* Eastward tooltip box */
-        .d3-tip {
-            font-size: 1vw;
-            line-height: 1;
-            padding: 1vw;
-            background: rgba(0, 0, 0, 0.8);
-            color: #fff;
-            pointer-events: none;
-        }
-
-        /* Draw the tip */
-        .d3-tip:after {
-            box-sizing: border-box;
-            display: inline;
-            font-size: 1vw;
-            width: 100%;
-            line-height: 1;
-            color: rgba(0, 0, 0, 0.8);
-            position: absolute;
-            pointer-events: none;
-            content: "\25C0";
-            top: 40%;
-            left: -1vw;
-        }
-        .title {
-            font-size: 5vw;
+        path:hover {
+            stroke: #2f2f2f; 
+            stroke-width: 3;
         }
 
     </style>
@@ -61,94 +41,89 @@
 
     <script>
         var width = 960
-	    var height = 500
-	    var radius = Math.min(width, height) / 2;
+        var height = 500
+        var radius = Math.min(width, height) / 2;
 
-        var data = [11, 8];
+        var data = [.61, .39];
 
 
         var color = d3.scaleOrdinal()
-		    .range(["#4286f4", "#ef3b56"]);
+            .range(["#4286f4", "#ef3b56"]);
 
-		var arc = d3.arc()
-		    .outerRadius(radius - 10)
-		    .innerRadius(0);
+        var arc = d3.arc()
+            .outerRadius(radius - 10)
+            .innerRadius(radius - 100);
 
-		var labelArc = d3.arc()
-		    .outerRadius(radius - 40)
-		    .innerRadius(radius - 40);
+        var pie = d3.pie()
+            .sort(null)
+            .value(function(d) { return d; });
 
-		var pie = d3.pie()
-		    .sort(null)
-		    .value(function(d) { return d; });
-
-        // select group inside of content for the chart
         var chart = d3.select("#content")
-            // .attr("width", width + margin.left + margin.left)
-            // .attr("height", height + margin.top + margin.bottom)
             .attr("preserveAspectRatio", "xMinYMin meet")
             .attr("viewBox", "0 0 " + width + " " + height)
             .append("g")
                 .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
+        var tipContainer = chart.append('rect')
+            .attr('x', -60)
+            .attr('y', -65)
+            .attr('class', 'tooltipContainer')
+            .attr('rx', '15')
+            .attr('ry', '15');
+
+        var tooltip = chart.append('text')
+            .attr('class', 'tooltipText')
+            .attr('x', -40)
+            .attr('y', 10);
 
         var g = chart.selectAll(".arc")
-			.data(pie(data))
-			.enter().append("g")
-			.attr("class", "arc");
+            .data(pie(data))
+            .enter().append("g")
+            .attr("class", "arc");
 
-		g.append("path")
-			.attr("d", arc)
-			.style("fill", function(d) { return color(d.data); });
+        g.append("path")
+            .attr("d", arc)
+            .style("fill", function(d) { return color(d.data); })
+            .on("mouseover", function(d) {
+                var total = d.data;
+                tooltip.html(d.data * 100 + '%');
+                tooltip.style('display', 'block');
+                tipContainer.style('display', 'block');
+            })
+            .on("mouseout", function() {
+                tooltip.style('display', 'none');
+                tipContainer.style('display', 'none');
+            });
 
-		g.append("text")
-			.attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
-			.attr("dy", ".35em")
-			.text(function(d) { return d.data; });
+        // g.append("text")
+        //  .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
+        //  .attr("dy", ".35em")
+        //  .text(function(d) { return d.data; });
 
         // update
         document.getElementById("button").onclick = function(e) {
             console.log("asdf");
 
-            // remap the domains for new data
-            scaleX.domain([0, d3.max(data1, function(d) { return d.value })]);
-            scaleY.domain(data1.map(function(d) { return d.name }));
+            var data1 = [.9, .1];
             
             // get the joins for the new data
-            var r = chart.selectAll("rect")
-                .data(data1);
-            
-            // enter for any new nodes    
-            r.enter()
-                .append("rect")
-                .attr("y", function(d, i) { return scaleY(d.name) })
-                .attr("height", scaleY.bandwidth())
-                .attr("width", function(d, i) { return scaleX(d.value) })
-                .style("fill", function(d) { return d.color });
-
-            // remove any removed nodes
-            r.exit().remove();
+            var r = chart.selectAll(".arc")
+                .data(pie(data1));
 
             // update the rest
-            r.transition().duration(1000)
-                .attr("y", function(d, i) { return scaleY(d.name) })
-                .attr("height", scaleY.bandwidth())
-                .attr("width", function(d, i) { return scaleX(d.value) })
-                .style("fill", function(d) { return d.color });
-
-            // remove old axis
-            chart.selectAll(".axis").remove()
-
-            // update new axis
-            chart.append("g").transition().duration(1000)
-                .attr("class", "x axis")
-                .attr("transform", "translate(0," + height + ")")
-                .call(xAxis);
-
-            chart.append("g").transition().duration(1000)
-                .attr("class", "y axis")
-                .attr("transform", "translate(-2,0)")
-                .call(yAxis);
+            r.select("path").transition().duration(1000)
+                .attr("d", arc)
+                .style("fill", function(d) { return color(d.data); })
+                .on("mouseover", function(d) {
+                    var total = d.data;
+                    tooltip.html(d.data * 100 + '%');
+                    tooltip.style('display', 'block');
+                    tipContainer.style('display', 'block');
+                })
+                .on("mouseout", function() {
+                    tooltip.style('display', 'none');
+                    tipContainer.style('display', 'none');
+                });
         }
     </script>
 </body>
