@@ -80,6 +80,9 @@ server.get('/api/v2/classresults/:name', routes.api_v2.classResults);
 // Day/Time functions here for later
 server.get('/api/v2/timestats/:name', routes.api_v2.timeStats);
 
+// Get the records for each class vs another class
+server.get('/api/v2/classrecords/:name', routes.api_v2.totalRecords);
+
 
 server.set('port', (process.env.PORT || 3000));
 server.listen(server.get('port'), function() {

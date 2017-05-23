@@ -127,6 +127,147 @@ exports.timeStats = function(req, res) {
     });
 };
 
+exports.totalRecords = function(req, res) {
+    var indexFromClass = {
+        warlock: 0,
+        warrior: 1,
+        paladin: 2,
+        shaman: 3,
+        priest: 4,
+        rogue: 5,
+        hunter: 6,
+        mage: 7,
+        druid: 8
+    }
+
+    pg.connect(conString, (err, client, done) => {
+        if (err) return console.error(err);
+
+        // We can make this better later
+        let dataObj = [
+            {"class": "warlock", "records": [
+                {"class": "warlock", "wins": 0, "losses": 0},
+                {"class": "warrior", "wins": 0, "losses": 0},
+                {"class": "paladin", "wins": 0, "losses": 0},
+                {"class": "shaman", "wins": 0, "losses": 0},
+                {"class": "priest", "wins": 0, "losses": 0},
+                {"class": "rogue", "wins": 0, "losses": 0},
+                {"class": "hunter", "wins": 0, "losses": 0},
+                {"class": "mage", "wins": 0, "losses": 0},
+                {"class": "druid", "wins": 0, "losses": 0},
+            ]},
+            {"class": "warrior", "records": [
+                {"class": "warlock", "wins": 0, "losses": 0},
+                {"class": "warrior", "wins": 0, "losses": 0},
+                {"class": "paladin", "wins": 0, "losses": 0},
+                {"class": "shaman", "wins": 0, "losses": 0},
+                {"class": "priest", "wins": 0, "losses": 0},
+                {"class": "rogue", "wins": 0, "losses": 0},
+                {"class": "hunter", "wins": 0, "losses": 0},
+                {"class": "mage", "wins": 0, "losses": 0},
+                {"class": "druid", "wins": 0, "losses": 0},
+            ]},
+            {"class": "paladin", "records": [
+                {"class": "warlock", "wins": 0, "losses": 0},
+                {"class": "warrior", "wins": 0, "losses": 0},
+                {"class": "paladin", "wins": 0, "losses": 0},
+                {"class": "shaman", "wins": 0, "losses": 0},
+                {"class": "priest", "wins": 0, "losses": 0},
+                {"class": "rogue", "wins": 0, "losses": 0},
+                {"class": "hunter", "wins": 0, "losses": 0},
+                {"class": "mage", "wins": 0, "losses": 0},
+                {"class": "druid", "wins": 0, "losses": 0},
+            ]},
+            {"class": "shaman", "records": [
+                {"class": "warlock", "wins": 0, "losses": 0},
+                {"class": "warrior", "wins": 0, "losses": 0},
+                {"class": "paladin", "wins": 0, "losses": 0},
+                {"class": "shaman", "wins": 0, "losses": 0},
+                {"class": "priest", "wins": 0, "losses": 0},
+                {"class": "rogue", "wins": 0, "losses": 0},
+                {"class": "hunter", "wins": 0, "losses": 0},
+                {"class": "mage", "wins": 0, "losses": 0},
+                {"class": "druid", "wins": 0, "losses": 0},
+            ]},
+            {"class": "priest", "records": [
+                {"class": "warlock", "wins": 0, "losses": 0},
+                {"class": "warrior", "wins": 0, "losses": 0},
+                {"class": "paladin", "wins": 0, "losses": 0},
+                {"class": "shaman", "wins": 0, "losses": 0},
+                {"class": "priest", "wins": 0, "losses": 0},
+                {"class": "rogue", "wins": 0, "losses": 0},
+                {"class": "hunter", "wins": 0, "losses": 0},
+                {"class": "mage", "wins": 0, "losses": 0},
+                {"class": "druid", "wins": 0, "losses": 0},
+            ]},
+            {"class": "rogue", "records": [
+                {"class": "warlock", "wins": 0, "losses": 0},
+                {"class": "warrior", "wins": 0, "losses": 0},
+                {"class": "paladin", "wins": 0, "losses": 0},
+                {"class": "shaman", "wins": 0, "losses": 0},
+                {"class": "priest", "wins": 0, "losses": 0},
+                {"class": "rogue", "wins": 0, "losses": 0},
+                {"class": "hunter", "wins": 0, "losses": 0},
+                {"class": "mage", "wins": 0, "losses": 0},
+                {"class": "druid", "wins": 0, "losses": 0},
+            ]},
+            {"class": "hunter", "records": [
+                {"class": "warlock", "wins": 0, "losses": 0},
+                {"class": "warrior", "wins": 0, "losses": 0},
+                {"class": "paladin", "wins": 0, "losses": 0},
+                {"class": "shaman", "wins": 0, "losses": 0},
+                {"class": "priest", "wins": 0, "losses": 0},
+                {"class": "rogue", "wins": 0, "losses": 0},
+                {"class": "hunter", "wins": 0, "losses": 0},
+                {"class": "mage", "wins": 0, "losses": 0},
+                {"class": "druid", "wins": 0, "losses": 0},
+            ]},
+            {"class": "mage", "records": [
+                {"class": "warlock", "wins": 0, "losses": 0},
+                {"class": "warrior", "wins": 0, "losses": 0},
+                {"class": "paladin", "wins": 0, "losses": 0},
+                {"class": "shaman", "wins": 0, "losses": 0},
+                {"class": "priest", "wins": 0, "losses": 0},
+                {"class": "rogue", "wins": 0, "losses": 0},
+                {"class": "hunter", "wins": 0, "losses": 0},
+                {"class": "mage", "wins": 0, "losses": 0},
+                {"class": "druid", "wins": 0, "losses": 0},
+            ]},
+            {"class": "druid", "records": [
+                {"class": "warlock", "wins": 0, "losses": 0},
+                {"class": "warrior", "wins": 0, "losses": 0},
+                {"class": "paladin", "wins": 0, "losses": 0},
+                {"class": "shaman", "wins": 0, "losses": 0},
+                {"class": "priest", "wins": 0, "losses": 0},
+                {"class": "rogue", "wins": 0, "losses": 0},
+                {"class": "hunter", "wins": 0, "losses": 0},
+                {"class": "mage", "wins": 0, "losses": 0},
+                {"class": "druid", "wins": 0, "losses": 0},
+            ]},
+        ];
+        
+        client.query('SELECT deck, opponent, result FROM games WHERE name = $1;', [req.params.name], (err, result) => {
+            if (!err) {
+                // id | name | deck | opponent | result | date
+                for (let i = 0; i < result.rowCount; i++) {
+                    let own_index = indexFromClass[result.rows[i].deck];
+                    let their_index = indexFromClass[result.rows[i].opponent];
+                    if (result.rows[i].result == "win")
+                        dataObj[own_index]['records'][their_index]['wins']++; 
+                    else
+                        dataObj[own_index]['records'][their_index]['losses']++; 
+                }
+            } else {
+                console.log(err)
+            }
+        })
+        .then(() => {
+            done();
+            res.json(dataObj);
+        });
+    });
+};
+
 addGame = function(data) {
     pg.connect(conString, (err, client, done) => {
         if (err) return console.error(err);

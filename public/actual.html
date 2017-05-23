@@ -158,8 +158,6 @@
             ]},
         ];
 
-        console.log(data[0].class);
-
         var margin = {top: 85, right: 20, bottom: 40, left: 80};
         var width = 1100 - margin.right - margin.left;
         var height = 700 - margin.top - margin.bottom;
@@ -181,8 +179,7 @@
         scaleX.domain(data.map(function(d) { return d.class }));
         scaleY.domain(data.map(function(d) { return d.class }));
 
-        // Draw the lines for the table
-        // LINES MARK THE END!! of the box - except placeholder!
+        // Vertical Lines
         chart.selectAll(".y .table-line")
             .data(data)
             .enter()
@@ -205,6 +202,7 @@
                 .attr("xlink:href", function(d) { return imageData[d.class] })
                 .attr("class", "y-image");
 
+        // Horizontal Lines
         chart.selectAll(".x .table-line")
             .data(data)
             .enter()
@@ -227,14 +225,15 @@
                 .attr("xlink:href", function(d) { return imageData[d.class] })
                 .attr("class", "x-image");
 
-
+        // Columns for recrds + background rects
         var columns = chart.selectAll(".column")
             .data(data.slice(1))
             .enter()
             .append("g")
                 .attr("class", "column")
                 .attr("transform", function(d) { return "translate(" + (scaleX(d.class) - (scaleX.bandwidth() / 1.5)) + ")" });
-           
+         
+        // Background rects   
         columns.selectAll("rect")
             .data(function(d) { return d.records})
             .enter()
@@ -252,6 +251,7 @@
                         return "tie-block"
                 });
 
+        // Records
         columns.selectAll("text")
             .data(function(d) { return d.records})
             .enter()
@@ -260,7 +260,7 @@
                 .attr("y", function(d) { return scaleY(d.class) - (scaleY.bandwidth() / 2) })
                 .attr("class", "record-text");
 
-        // title
+        // Title
         chart.append("g")
             .attr("transform", "translate(" + (width * .4) + "," + (-20 - margin.bottom) + ")")
             .append("text")
