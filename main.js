@@ -80,7 +80,7 @@ server.get('/api/v2/classresults/:name', routes.api_v2.classResults);
 // Day/Time functions here for later
 server.get('/api/v2/timestats/:name', routes.api_v2.timeStats);
 
-// Get the records for each class vs another class
+// Get the records for each class vs another class - see api file for format of data
 server.get('/api/v2/classrecords/:name', routes.api_v2.totalRecords);
 
 
