@@ -133,3 +133,177 @@ $.ajax({type: "GET", url: "/api/v2/classrecords/" + userName}).done(function(d) 
 });
 
 
+// Line Chart ////////////////////////////////////////////////////////////////
+
+var timeData = null;
+var lineChartData = null;
+
+var margin = {top: 85, right: 20, bottom: 40, left: 80};
+var width = 1100 - margin.right - margin.left;
+var height = 700 - margin.top - margin.bottom;
+
+// init scales
+var scaleLineX = d3.scaleLinear().rangeRound([0, width]);
+var scaleLineY = d3.scaleLinear().rangeRound([height, 0]);
+
+var xAxis = null;
+var yAxis = null;
+
+// Create line function for x,y positions
+var line = d3.line()
+    .x(function(d, i) { return scaleLineX(i) })
+    .y(function(d, i) { return scaleLineY(d) });
+
+var lineChart = d3.select("#lineChart")
+    .attr("preserveAspectRatio", "xMinYMin meet")
+    .attr("viewBox", "0 0 " + (width + margin.left + margin.left) + " " + (height + margin.top + margin.bottom))
+    .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+$.ajax({type: "GET", url: "/api/v2/timestats/" + userName}).done(function(d) {
+    timeData = d;
+}).then(function() {
+    // initial dataset
+    lineChartData = timeData['dayCount'];
+
+    // Set domain for scales
+    scaleLineX.domain([0, lineChartData.length - 1]);
+    scaleLineY.domain([0, d3.max(lineChartData)]);
+
+    // Create Axes
+    xAxis = d3.axisBottom(scaleLineX).ticks(lineChartData.length).tickFormat(formatDateLabel);
+    yAxis = d3.axisLeft(scaleLineY);
+
+    // Append the x axis 
+    lineChart.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    // Append the Y axis
+    lineChart.append("g")
+        .attr("class", "axis")
+        .call(yAxis);
+
+    // Title
+    lineChart.append("g")
+        .attr("transform", "translate(" + width * 0.3 + ",-25)")
+        .append("text")
+            .html("Games Played in Last 7 Days")
+            .attr("class", "line-title")
+
+    // Draw the line
+    lineChart.append("path")
+        .datum(lineChartData)
+        .attr("class", "lc-path")
+        .attr("d", line)
+        .attr("stroke", "#34c");
+
+    // Draw the dots
+    lineChart.selectAll(".dot")
+        .data(lineChartData)
+        .enter()
+        .append("circle")
+            .attr("r", 5)
+            .attr("cx", function(d, i) { return scaleLineX(i) })
+            .attr("cy", function(d, i) { return scaleLineY(d) })
+            .attr("fill", "#34c")
+            .attr("class", "dot");
+});
+
+// Line Chart Helpers --------
+
+function updateLineChart(type) {
+    // update data
+    var titleText = "";
+    var strokeColor = "";
+    if (type == "year") {
+        lineChartData = timeData['yearCount'];
+        titleText = "Games Played in Last 12 Months";
+        strokeColor = "#e44";
+    }
+    else if (type == "month") {
+        lineChartData = timeData['monthCount'];
+        titleText = "Games Played in Last 4 Weeks";
+        strokeColor = "#1b7";
+    }
+    else {
+        lineChartData = timeData['dayCount'];
+        titleText = "Games Played in Last 7 Days";
+        strokeColor = "#34c";
+    }
+
+    // update scales
+    scaleLineX.domain([0, lineChartData.length - 1]);
+    scaleLineY.domain([0, d3.max(lineChartData)]);
+
+    // Remove old data
+    lineChart.selectAll(".axis").remove();
+    lineChart.selectAll(".path").remove();
+    lineChart.selectAll(".dot").remove();
+
+    // new title
+    lineChart.selectAll(".line-title").html(titleText)
+
+    // new X axis 
+    xAxis = d3.axisBottom(scaleLineX).ticks(lineChartData.length > 15 ? lineChartData.length / 2 : lineChartData.length).tickFormat(formatDateLabel);
+    lineChart.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    // new Y axis
+    lineChart.append("g").transition().duration(1000)
+        .attr("class", "axis")
+        .call(yAxis);
+
+    // new line
+    lineChart.select(".lc-path").transition().duration(500)
+        .attr("d", line(lineChartData))
+        .attr("stroke", strokeColor);
+
+    // New dots
+    lineChart.selectAll(".dot")
+        .data(lineChartData)
+        .enter()
+        .append("circle")
+            .attr("r", 0)
+            .attr("cx", function(d, i) { return scaleLineX(i) })
+            .attr("cy", function(d, i) { return scaleLineY(d) })
+            .attr("fill", strokeColor)
+            .attr("class", "dot")
+            .transition().duration(1500)
+                .attr("r", 5);
+}
+
+function formatDateLabel(d, i) {
+    var d = new Date();
+    if (lineChartData.length != 12) {
+        d.setDate(d.getDate() - (lineChartData.length - 1 - i));
+        return d.toLocaleDateString();
+    } 
+    else {
+        var monthArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        d.setMonth(d.getMonth() - (lineChartData.length - 1 - i));
+        return monthArray[d.getMonth()];
+    }
+}
+
+document.getElementById("lineDay").onclick = function(e) {
+    updateLineChart("day");
+}
+
+document.getElementById("lineMonth").onclick = function(e) {
+    updateLineChart("month");
+}
+
+document.getElementById("lineYear").onclick = function(e) {
+    updateLineChart("year");
+}
+
+
+
+
+
+
+

@@ -34,6 +34,19 @@
             stroke: dimgray;
             stroke-width: 4;
         }
+        .lc-path {
+            fill: none;
+            stroke-linejoin: round;
+            stroke-linecap: round;
+            stroke-width: 3;
+        }
+        .line-title {
+            font-size: 32px;
+            font-weight: bold;
+        }
+        .dot:hover {
+            r: 10px;
+        }
     </style>
 
     <script>
@@ -48,7 +61,18 @@
         <div class="row">
             <svg id="table"></svg>
         </div>
-
+        <div class="row">
+            <div>
+                <svg id="lineChart"></svg>
+                <div style="display: inline-block;">
+                    <button id="lineDay">Past Week</button>
+                    <button id="lineMonth">Past Month</button>
+                    <button id="lineYear">Past Year</button>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="width: 100%; height: 5vh">
+        </div>
     </div>
     <script src="/js/stats.js" type="text/javascript"></script>
 </body>
