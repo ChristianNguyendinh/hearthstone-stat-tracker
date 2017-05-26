@@ -176,13 +176,13 @@ $.ajax({type: "GET", url: "/api/v2/timestats/" + userName}).done(function(d) {
 
     // Append the x axis 
     lineChart.append("g")
-        .attr("class", "axis")
+        .attr("class", "big axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
 
     // Append the Y axis
     lineChart.append("g")
-        .attr("class", "axis")
+        .attr("class", "big axis")
         .call(yAxis);
 
     // Title
@@ -248,13 +248,13 @@ function updateLineChart(type) {
     // new X axis 
     xAxis = d3.axisBottom(scaleLineX).ticks(lineChartData.length > 15 ? lineChartData.length / 2 : lineChartData.length).tickFormat(formatDateLabel);
     lineChart.append("g")
-        .attr("class", "axis")
+        .attr("class", "big axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
 
     // new Y axis
     lineChart.append("g").transition().duration(1000)
-        .attr("class", "axis")
+        .attr("class", "big axis")
         .call(yAxis);
 
     // new line
@@ -300,6 +300,115 @@ document.getElementById("lineMonth").onclick = function(e) {
 document.getElementById("lineYear").onclick = function(e) {
     updateLineChart("year");
 }
+
+// Bar Chart ////////////////////////////////////////////////////////////////
+
+var barData = null;
+
+$.ajax({type: "GET", url: "/api/v2/classresults/" + userName}).done(function(d) {
+    barData = d;
+}).then(function() {
+
+    var classColor = {
+        "warlock": "purple",
+        "warrior": "red",
+        "paladin": "yellow",
+        "druid": "brown",
+        "rogue": "gray",
+        "priest": "pink",
+        "hunter": "orange",
+        "mage": "blue",
+        "shaman": "green"
+    };
+
+    var dataArray = Object.keys(barData).map(function(x) {
+        return {"class": x, "color": classColor[x], "records": barData[x]}
+    });
+
+    var margin = {top: 85, right: 20, bottom: 40, left: 80};
+    var width = 1100 - margin.right - margin.left;
+    var height = 700 - margin.top - margin.bottom;
+
+    var scaleX = d3.scaleBand().rangeRound([0, width]);
+    var scaleY = d3.scaleLinear().rangeRound([height, 0]);
+
+    var xAxis = d3.axisBottom(scaleX);
+    var yAxis = d3.axisLeft(scaleY);
+
+    // Left Bar Chart -------------
+
+    var barChart1 = d3.select("#leftBarChart")
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 " + (width + margin.left + margin.left) + " " + (height + margin.top + margin.bottom))
+        .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    scaleX.domain(dataArray.map(function(d) { return d.class }));
+    scaleY.domain([0, d3.max(dataArray, function(d) { return d['records']['gamesPlayedAs']})]);
+
+    barChart1.append("g")
+        .attr("class", "x small axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    barChart1.append("g")
+        .attr("class", "y small axis")
+        .attr("transform", "translate(-2,0)")
+        .call(yAxis);
+
+    barChart1.append("g")
+        .attr("transform", "translate(" + (width * 0.3) + "," + (0 - margin.bottom) + ")")
+        .append("text")
+            .html("Games Played As")
+            .attr("class", "bar-title")
+
+    barChart1.selectAll("rect")
+        .data(dataArray)
+        .enter()
+        .append("rect")
+            .attr("x", function(d) { return scaleX(d['class']) })
+            .attr("y", function(d) { return scaleY(d['records']['gamesPlayedAs']) })
+            .attr("width", scaleX.bandwidth())
+            .attr("height", function(d) { return height - scaleY(d['records']['gamesPlayedAs']) })
+            .style("fill", function(d) { return d['color'] })
+
+    // Right Bar Chart -------------
+
+    var barChart2 = d3.select("#rightBarChart")
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 " + (width + margin.left + margin.left) + " " + (height + margin.top + margin.bottom))
+        .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    scaleX.domain(dataArray.map(function(d) { return d.class }));
+    scaleY.domain([0, d3.max(dataArray, function(d) { return d['records']['gamesPlayedAgainst']})]);
+
+    barChart2.append("g")
+        .attr("class", "x small axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    barChart2.append("g")
+        .attr("class", "y small axis")
+        .attr("transform", "translate(-2,0)")
+        .call(yAxis);
+
+    barChart2.append("g")
+        .attr("transform", "translate(" + (width * 0.3) + "," + (0 - margin.bottom) + ")")
+        .append("text")
+            .html("Games Played Against")
+            .attr("class", "bar-title")
+
+    barChart2.selectAll("rect")
+        .data(dataArray)
+        .enter()
+        .append("rect")
+            .attr("x", function(d) { return scaleX(d['class']) })
+            .attr("y", function(d) { return scaleY(d['records']['gamesPlayedAgainst']) })
+            .attr("width", scaleX.bandwidth())
+            .attr("height", function(d) { return height - scaleY(d['records']['gamesPlayedAgainst']) })
+            .style("fill", function(d) { return d['color'] })
+});
 
 
 
