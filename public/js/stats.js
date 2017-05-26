@@ -10,6 +10,18 @@ var imageData = {
     "druid": '/images/icons/icon_druid.png'
 };
 
+var portraits = {
+    "warlock": "/images/class_full_image/guldan.png",
+    "warrior": "/images/class_full_image/garrosh.png",
+    "paladin": "/images/class_full_image/uther.png",
+    "druid": "/images/class_full_image/malfurion.png",
+    "rogue": "/images/class_full_image/valeera.png",
+    "priest": "/images/class_full_image/anduin.png",
+    "hunter": "/images/class_full_image/rexxar.png",
+    "mage": "/images/class_full_image/jaina.png",
+    "shaman": "/images/class_full_image/thrall.png"
+};
+
 // Table ////////////////////////////////////////////////////////////////
 
 var tableData = null;
@@ -51,7 +63,7 @@ $.ajax({type: "GET", url: "/api/v2/classrecords/" + userName}).done(function(d) 
             .attr("x1", function(d) { return scaleX(d.class) })
             .attr("x2", function(d) { return scaleX(d.class) })
             .attr("y1", 0)
-            .attr("y2", height - scaleY.bandwidth())
+            .attr("y2", height)
             .attr("class", "y table-line")
 
     // Images on top
@@ -72,7 +84,7 @@ $.ajax({type: "GET", url: "/api/v2/classrecords/" + userName}).done(function(d) 
         .enter()
         .append("line")
             .attr("x1", 0)
-            .attr("x2", width - scaleX.bandwidth())
+            .attr("x2", width)
             .attr("y1", function(d) { return scaleY(d.class) })
             .attr("y2", function(d) { return scaleY(d.class) })
             .attr("class", "x table-line");
@@ -130,6 +142,7 @@ $.ajax({type: "GET", url: "/api/v2/classrecords/" + userName}).done(function(d) 
         .append("text")
             .html("Your Class")
             .attr("class", "table-title")
+
 });
 
 
@@ -408,9 +421,57 @@ $.ajax({type: "GET", url: "/api/v2/classresults/" + userName}).done(function(d) 
             .attr("width", scaleX.bandwidth())
             .attr("height", function(d) { return height - scaleY(d['records']['gamesPlayedAgainst']) })
             .style("fill", function(d) { return d['color'] })
+
+    // Most Games Played + Win Rate Info -------------
+
+    d3.select("#gamesPlayed")
+        .html("Total Games Played: " + d3.max(dataArray, function(d) { return d['records']['gamesPlayedAs']}));
+
+    d3.select("#gamesPlayedPortrait").append("img")
+        .attr("src", getMostPlayedPortrait(dataArray));
+
+    d3.select("#winRatePortrait").append("img")
+        .attr("src", getWinRatePortrait(dataArray));
+
+    function getMostPlayedPortrait(d) {
+
+        mpClass = "";
+        max = 0;
+        dataArray.forEach(function(x) {
+            if (x['records']['gamesPlayedAs'] >= max) {
+                max = x['records']['gamesPlayedAs'];
+                mpClass = x['class'];
+            }
+        });
+        return portraits[mpClass]
+    }
+
+    function getWinRatePortrait(d) {
+        bestClass = "";
+        best = 0;
+
+        dataArray.forEach(function(x) {
+            if (x['records']['gamesWonAs'] / x['records']['gamesPlayedAs'] >= best) {
+                best = x['records']['gamesWonAs'] / x['records']['gamesPlayedAs'];
+                bestClass = x['class'];
+            }
+        });
+        console.log(best)
+        return portraits[bestClass]
+    }
+
 });
 
+// WinRate Info ////////////////////////////////////////////////////////////////
 
+var winRateData = null;
+
+$.ajax({type: "GET", url: "/api/v2/winrate/" + userName}).done(function(d) {
+    winRateData = d;
+}).then(function() {
+    d3.select("#winRate")
+        .html("Total Win Rate: " + parseInt(winRateData['count']) + "%");
+});
 
 
 
