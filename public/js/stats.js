@@ -348,7 +348,7 @@ function formatDateLabel(d, i) {
     var d = new Date();
     if (lineChartData.length == 12) {
         var monthArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        d.setMonth(d.getMonth() - (lineChartData.length - 1 - (i * 2)));
+        d.setMonth(d.getMonth() - (lineChartData.length - 1 - i));
         return monthArray[d.getMonth()];
     } 
     else if (lineChartData.length == 7) {
