@@ -119,7 +119,9 @@ $.ajax({type: "GET", url: "/api/v2/classrecords/" + userName}).done(function(d) 
             .attr("x", -(scaleX.bandwidth() * 0.24))
             .attr("y", function(d) { return scaleY(d.class) - (scaleY.bandwidth() - 2) })
             .attr("class", function(d) { 
-                if (d.wins > d.losses) 
+                if (d.wins == 0 && d.losses == 0)
+                    return "none-block block"
+                else if (d.wins > d.losses) 
                     return "win-block block"
                 else if (d.wins < d.losses)
                     return "lose-block block"
@@ -143,7 +145,60 @@ $.ajax({type: "GET", url: "/api/v2/classrecords/" + userName}).done(function(d) 
             .html("Your Class")
             .attr("class", "table-title")
 
+    var verticalEnd = table.append("g")
+        .attr("class", "v-end")
+        .attr("transform", function(d) { return "translate(" + (scaleX("druid") + (scaleY.bandwidth() * 0.4)) + ")" });
+
+    verticalEnd.selectAll("text")
+        .data(tableData.slice(1))
+        .enter()
+        .append("text")
+            .html(function(d) { return genTotalRowData(tableData.slice(1), d.class) })
+            .attr("y", function(d) { return scaleY(d.class) - (scaleY.bandwidth() * 0.4) })
+            .attr("class", "record-text");
+
+    var horizontalEnd = table.append("g")
+        .attr("class", "h-end")
+        .attr("transform", function(d) { return "translate(0," + (scaleY("druid") + (scaleY.bandwidth() * 0.7)) + ")" });
+
+    horizontalEnd.selectAll("text")
+        .data(tableData.slice(1))
+        .enter()
+        .append("text")
+            .html(function(d) { return genTotalColData(d) })
+            .attr("x", function(d) { return scaleX(d.class) - (scaleX.bandwidth() * 0.75) })
+            .attr("class", "record-text");
 });
+
+// Helpers for Table --------
+
+function genTotalColData(c) {
+    var w = 0;
+    var l = 0;
+
+    c['records'].forEach(function(x) {
+        w += x['wins'];
+        l += x['losses'];
+    });
+
+    return w + " - " + l;
+}
+
+function genTotalRowData(d, c) {
+    var w = 0;
+    var l = 0;
+
+    d.forEach(function(x) {
+        x['records'].forEach(function(p) {
+            if (p['class'] == c) {
+                w += p['wins'];
+                l += p['losses'];
+            }
+        })
+    });
+
+    return w + " - " + l;
+}
 
 
 // Line Chart ////////////////////////////////////////////////////////////////
