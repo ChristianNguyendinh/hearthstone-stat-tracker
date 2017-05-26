@@ -379,14 +379,14 @@ $.ajax({type: "GET", url: "/api/v2/classresults/" + userName}).done(function(d) 
 
     var classColor = {
         "warlock": "purple",
-        "warrior": "red",
-        "paladin": "yellow",
-        "druid": "brown",
-        "rogue": "gray",
-        "priest": "pink",
-        "hunter": "orange",
-        "mage": "blue",
-        "shaman": "green"
+        "warrior": "maroon",
+        "paladin": "khaki",
+        "druid": "sienna",
+        "rogue": "tomato",
+        "priest": "oldlace",
+        "hunter": "green",
+        "mage": "navy",
+        "shaman": "teal"
     };
 
     var dataArray = Object.keys(barData).map(function(x) {
@@ -397,7 +397,7 @@ $.ajax({type: "GET", url: "/api/v2/classresults/" + userName}).done(function(d) 
     var width = 1100 - margin.right - margin.left;
     var height = 700 - margin.top - margin.bottom;
 
-    var scaleX = d3.scaleBand().rangeRound([0, width]);
+    var scaleX = d3.scaleBand().rangeRound([0, width]).padding(0.1);
     var scaleY = d3.scaleLinear().rangeRound([height, 0]);
 
     var xAxis = d3.axisBottom(scaleX);
