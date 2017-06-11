@@ -7,6 +7,7 @@ const pg = require('pg');
 const conString = process.env.DATABASE_URL || 'postgres://localhost:5432/christian';
 
 
+server.set('view engine', 'ejs');
 
 server.use(bodyparser.json());
 server.use(bodyparser.urlencoded({
@@ -38,7 +39,7 @@ server.get('/rand', (req, res) => {
 var secret = "asdf"
 
 server.get('/login', (req, res) => {
-    res.send("login page here")
+    res.render('login');
 });
 
 // leave the get for later
