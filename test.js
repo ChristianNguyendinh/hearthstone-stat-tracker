@@ -44,9 +44,6 @@ server.get('/login', (req, res) => {
 
 // leave the get for later
 server.post('/login', (req, res) => {
-    console.log(req.body.username);
-    console.log(req.body.password);
-    console.log(req.params);
     var auth = false;
     var sessionID = null;
 
@@ -54,7 +51,6 @@ server.post('/login', (req, res) => {
         if (err) return console.error(err);
 
         var hash = crypto.createHmac('sha256', secret).update(req.body.password).digest('hex')
-        console.log(hash)
 
         client.query('SELECT id FROM users WHERE username = $1 AND pass = $2;', [req.body.username, hash], (err, result) => {
             if (!err) {
@@ -70,37 +66,16 @@ server.post('/login', (req, res) => {
             done();
             if (auth) {
                 req.poop.sessionID = sessionID;
+                res.redirect('/dashboard');
+            } else {
+                res.redirect('/login');
             }
-            res.json({authenticated: auth});
         });
     });
 })
 
-server.get('/dashboard', (req, res) => {
-    var auth = false;
-
-    pg.connect(conString, (err, client, done) => {
-        if (err) return console.error(err);
-
-        client.query('SELECT userid FROM sessions WHERE sessionid = $1;', [req.poop.sessionID], (err, result) => {
-            if (!err) {
-                if (result.rowCount == 1) {
-                    auth = true;
-                }
-            } else {
-                return console.error(err);
-            }
-        })
-        .then(() => {
-            done();
-            if (auth) {
-                res.json({authenticated: true}); 
-            }
-            else {
-                res.json({authenticated: false});                
-            }
-        });
-    });
+server.get('/dashboard', checkAuth, (req, res) => {
+    res.json({authenticated: true}); 
 });
 
 server.set('port', (process.env.PORT || 3000));
@@ -127,6 +102,32 @@ function newSessionID(userID) {
     return sessionID;
 }
 
+function checkAuth(req, res, next) {
+    var auth = false;
 
+    // add a middleware function that does this to the auth required pages
+    pg.connect(conString, (err, client, done) => {
+        if (err) return console.error(err);
+
+        client.query('SELECT userid FROM sessions WHERE sessionid = $1;', [req.poop.sessionID], (err, result) => {
+            if (!err) {
+                if (result.rowCount == 1) {
+                    auth = true;
+                }
+            } else {
+                return console.error(err);
+            }
+        })
+        .then(() => {
+            done();
+            if (auth) {
+                next();
+            }
+            else {
+                res.redirect('/login')              
+            }
+        });
+    });
+}
 
 
