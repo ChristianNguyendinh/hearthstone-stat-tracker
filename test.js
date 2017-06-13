@@ -42,7 +42,6 @@ server.get('/login', (req, res) => {
     res.render('login');
 });
 
-// leave the get for later
 server.post('/login', (req, res) => {
     var auth = false;
     var sessionID = null;
