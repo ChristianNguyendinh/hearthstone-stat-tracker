@@ -1,18 +1,19 @@
-var express = require('express');
-var server = express();
-var path = require('path');
-var request = require('request');
-var bodyparser = require('body-parser');
-var routes = require('./routes/routes.js');
-var session = require('client-sessions');
-var crypto = require('crypto');
+const express = require('express');
+const server = express();
+const path = require('path');
+const request = require('request');
+const bodyparser = require('body-parser');
+const session = require('client-sessions');
+const routes = require('./routes/routes.js');
+
+// Globals - Move to other file?
+pg = require('pg');
+crypto = require('crypto');
+conString = process.env.DATABASE_URL || 'postgres://localhost:5432/christian';
+
 
 // temp until we figure other things out
 var users = ['christian', 'christian-arena', 'testName']
-
-// move to config file
-const pg = require('pg');
-const conString = process.env.DATABASE_URL || 'postgres://localhost:5432/christian';
 
 server.use(bodyparser.json());
 server.use(bodyparser.urlencoded({
@@ -58,7 +59,7 @@ server.get('/stats/:name/', function(req, res) {
 });
 
 server.get('/dashboard/', checkAuth, (req, res) => {
-    res.json({authenticated: true}); 
+    res.render('dashboard', {name: "kurisu chan"});
 });
 
 ////////// Login Page ////////////////////

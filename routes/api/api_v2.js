@@ -1,7 +1,3 @@
-// move to config file
-const pg = require('pg');
-const conString = process.env.DATABASE_URL || 'postgres://localhost:5432/christian';
-
 exports.postData = function(req, res) {
     addGame(req.body);
     res.json({ message: "good - v2" });

@@ -1,8 +1,4 @@
 const secret = "asdf";
-// move to config file
-const pg = require('pg');
-const crypto = require('crypto');
-const conString = process.env.DATABASE_URL || 'postgres://localhost:5432/christian';
 
 exports.loginGet = (req, res) => {
     res.render('login');
