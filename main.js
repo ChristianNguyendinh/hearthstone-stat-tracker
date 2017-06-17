@@ -4,9 +4,15 @@ var path = require('path');
 var request = require('request');
 var bodyparser = require('body-parser');
 var routes = require('./routes/routes.js');
+var session = require('client-sessions');
+var crypto = require('crypto');
 
 // temp until we figure other things out
 var users = ['christian', 'christian-arena', 'testName']
+
+// move to config file
+const pg = require('pg');
+const conString = process.env.DATABASE_URL || 'postgres://localhost:5432/christian';
 
 server.use(bodyparser.json());
 server.use(bodyparser.urlencoded({
@@ -18,6 +24,20 @@ server.use(express.static(path.join(__dirname, 'public')));
 // temp for now
 server.use('/scripts', express.static(path.join(__dirname, '/node_modules/chart.js/dist/')));
 server.use('/scripts', express.static(path.join(__dirname, '/node_modules/d3-tip/')));
+
+// Session Cookies for login
+server.use(session({
+    cookieName: 'poop',
+    secret: 'random_string_goes_here',
+    duration: 30 * 60 * 1000,
+    activeDuration: 5 * 60 * 1000,
+    cookie: { 
+        ephemeral: true
+    }
+}));
+
+
+// Routes ///////////////////////////
 
 server.get('/', function(req, res) {
     res.send("Greetings Traveler");
@@ -37,19 +57,15 @@ server.get('/stats/:name/', function(req, res) {
         res.send("Invalid User")
 });
 
-server.get('/graphs/', function(req, res) {
-    res.sendFile(path.join(__dirname, 'public/graphs.html'));
+server.get('/dashboard/', checkAuth, (req, res) => {
+    res.json({authenticated: true}); 
 });
 
-server.post('/msg/', function(req, res) {
-    console.log(req.body.message);
-    res.send("good");
-});
+////////// Login Page ////////////////////
 
-server.get('/msg/', function(req, res) {
-    console.log("Asdffff")
-    res.send("asdf");
-});
+server.get('/login/', routes.login.loginGet);
+
+server.post('/login/', routes.login.loginPost);
 
 ////////// API Version 1 : SQLITE3 ////////////////////
 
@@ -89,3 +105,32 @@ server.listen(server.get('port'), function() {
     console.log("Server started... - " + new Date().toString());
 });
 
+// Middleware functions ///////
+
+function checkAuth(req, res, next) {
+    var auth = false;
+
+    // add a middleware function that does this to the auth required pages
+    pg.connect(conString, (err, client, done) => {
+        if (err) return console.error(err);
+
+        client.query('SELECT userid FROM sessions WHERE sessionid = $1;', [req.poop.sessionID], (err, result) => {
+            if (!err) {
+                if (result.rowCount == 1) {
+                    auth = true;
+                }
+            } else {
+                return console.error(err);
+            }
+        })
+        .then(() => {
+            done();
+            if (auth) {
+                next();
+            }
+            else {
+                res.redirect('/login')              
+            }
+        });
+    });
+}
