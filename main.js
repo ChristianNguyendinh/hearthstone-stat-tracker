@@ -6,7 +6,7 @@ const bodyparser = require('body-parser');
 const session = require('client-sessions');
 const routes = require('./routes/routes.js');
 
-// Globals - Move to other file?
+// Globals - Move to config file?
 pg = require('pg');
 crypto = require('crypto');
 conString = process.env.DATABASE_URL || 'postgres://localhost:5432/christian';
@@ -60,6 +60,9 @@ server.get('/stats/:name/', function(req, res) {
 
 server.get('/dashboard/', checkAuth, (req, res) => {
     res.render('dashboard', {name: "kurisu chan"});
+});
+server.get('/test/', (req, res) => {
+    res.render('dashboard', {name: "asdf124"});
 });
 
 ////////// Login Page ////////////////////

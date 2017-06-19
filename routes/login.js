@@ -43,9 +43,19 @@ function newSessionID(userID) {
     pg.connect(conString, (err, client, done) => {
         if (err) return console.error(err);
 
-        client.query('INSERT INTO sessions (sessionID, userID) VALUES ($1, $2)', [sessionID, userID], (err, result) => {
+        // Clear sessions with ID, then add new one
+        client.query('DELETE FROM sessions WHERE userid = $1', [userID], (err, result) => {
             if (err) {
                 return console.error(err);
+            }
+            else {
+                client.query('INSERT INTO sessions (sessionid, userid) VALUES ($1, $2)', [sessionID, userID], (err, result) => {
+                    if (err)
+                        return console.error(err);
+                })  
+                .then(() => {
+                    done();
+                });
             }
         })
         .then(() => {

@@ -1,6 +1,5 @@
 hallo  
   
-clean up sessions table  
 do something with dashboard  
 front end design hmm...  
     - navbar  
@@ -8,4 +7,9 @@ front end design hmm...
     - dashboard  
     - homepage  
     - stats page  
-    - add game page??  
+    - Start new session page  
+    - about page  
+make html modular  
+registration  
+forgot password  
+customizable profiles?  
