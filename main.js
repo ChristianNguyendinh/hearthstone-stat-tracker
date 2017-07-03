@@ -40,26 +40,20 @@ server.use(session({
 
 // Routes ///////////////////////////
 
-server.get('/', function(req, res) {
+server.get('/', (req, res) => {
     res.send("Greetings Traveler");
 });
 
-server.get('/index/:name', function(req, res) {
-    if (users.indexOf(req.params.name) != -1)
-        res.render('index', { name: req.params.name });
-    else
-        res.send("Invalid User")
+server.get('/index/', checkAuth, (req, res) => {
+    res.render('index', { name: req.user });
 });
 
-server.get('/stats/:name/', function(req, res) {
-    if (users.indexOf(req.params.name) != -1)
-        res.render('stats', { name: req.params.name });
-    else
-        res.send("Invalid User")
+server.get('/stats/', checkAuth, (req, res) => {
+    res.render('stats', { name: req.user });
 });
 
 server.get('/dashboard/', checkAuth, (req, res) => {
-    res.render('dashboard', {name: "kurisu chan"});
+    res.render('dashboard', { name: req.user });
 });
 server.get('/test/', (req, res) => {
     res.render('dashboard', {name: "asdf124"});
@@ -119,22 +113,26 @@ function checkAuth(req, res, next) {
         if (err) return console.error(err);
 
         client.query('SELECT userid FROM sessions WHERE sessionid = $1;', [req.poop.sessionID], (err, result) => {
-            if (!err) {
-                if (result.rowCount == 1) {
-                    auth = true;
-                }
-            } else {
-                return console.error(err);
+            if (err) return console.error(err);
+
+            if (result.rowCount == 1) {
+                auth = true;
+                // Get the username from the users file
+                client.query('SELECT username FROM users WHERE id = $1;', [result.rows[0].userid], (err, new_result) => {
+                    if (err) return console.error(err);
+                    
+                    req.user = new_result.rows[0].username;
+                })
+                .then(() => {
+                    done();
+                    if (auth) {
+                        next();
+                    }
+                    else {
+                        res.redirect('/login')              
+                    }
+                });
             }
         })
-        .then(() => {
-            done();
-            if (auth) {
-                next();
-            }
-            else {
-                res.redirect('/login')              
-            }
-        });
     });
 }

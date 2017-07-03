@@ -7,7 +7,6 @@ exports.loginGet = (req, res) => {
 exports.loginPost = (req, res) => {
     var auth = false;
     var sessionID = null;
-
     pg.connect(conString, (err, client, done) => {
         if (err) return console.error(err);
 
