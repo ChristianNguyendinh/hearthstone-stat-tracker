@@ -59,11 +59,15 @@ server.get('/test/', (req, res) => {
     res.render('dashboard', {name: "asdf124"});
 });
 
-////////// Login Page ////////////////////
+////////// Login and Registration ////////////////////
 
 server.get('/login/', routes.login.loginGet);
 
 server.post('/login/', routes.login.loginPost);
+
+server.get('/register/', routes.register.registerGet);
+
+server.post('/register/', routes.register.registerPost);
 
 ////////// API Version 1 : SQLITE3 ////////////////////
 
