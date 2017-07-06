@@ -111,7 +111,6 @@ function checkAuth(req, res, next) {
     // add a middleware function that does this to the auth required pages
     pg.connect(config.conString, (err, client, done) => {
         if (err) return console.error(err);
-
         client.query('SELECT userid FROM sessions WHERE sessionid = $1;', [req.poop.sessionID], (err, result) => {
             if (err) return console.error(err);
 
@@ -129,9 +128,11 @@ function checkAuth(req, res, next) {
                         next();
                     }
                     else {
-                        res.redirect('/login')              
+                        res.redirect('/login');            
                     }
                 });
+            } else {
+                res.redirect('/login')  
             }
         })
     });
