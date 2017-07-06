@@ -6,14 +6,10 @@ const bodyparser = require('body-parser');
 const session = require('client-sessions');
 const routes = require('./routes/routes.js');
 
-// Globals - Move to config file?
+// Global Imports
+config = require('./config.js');
 pg = require('pg');
 crypto = require('crypto');
-conString = process.env.DATABASE_URL || 'postgres://localhost:5432/christian';
-
-
-// temp until we figure other things out
-var users = ['christian', 'christian-arena', 'testName']
 
 server.use(bodyparser.json());
 server.use(bodyparser.urlencoded({
@@ -113,7 +109,7 @@ function checkAuth(req, res, next) {
     var auth = false;
 
     // add a middleware function that does this to the auth required pages
-    pg.connect(conString, (err, client, done) => {
+    pg.connect(config.conString, (err, client, done) => {
         if (err) return console.error(err);
 
         client.query('SELECT userid FROM sessions WHERE sessionid = $1;', [req.poop.sessionID], (err, result) => {

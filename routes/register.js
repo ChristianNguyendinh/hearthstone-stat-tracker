@@ -1,15 +1,13 @@
-var secret = "asdf"
-
 exports.registerGet = (req, res) => {
     res.render('register');
 };
 
 exports.registerPost = (req, res) => {
     var sessionID = null;
-    pg.connect(conString, (err, client, done) => {
+    pg.connect(config.conString, (err, client, done) => {
         if (err) return console.error(err);
 
-        var hash = crypto.createHmac('sha256', secret).update(req.body.password1).digest('hex')
+        var hash = crypto.createHmac('sha256', config.secret).update(req.body.password1).digest('hex')
 
         // in the future check if user already exists...
         client.query('INSERT INTO users (username, pass) VALUES ($1, $2);', [req.body.username, hash], (err, result) => {

@@ -4,7 +4,7 @@ exports.postData = function(req, res) {
 };
 
 exports.winRate = function(req, res) {
-    pg.connect(conString, (err, client, done) => {
+    pg.connect(config.conString, (err, client, done) => {
         if (err) return console.error(err);
         
         let ratioArr = [];
@@ -32,7 +32,7 @@ exports.winRate = function(req, res) {
 };
 
 exports.winLoss = function(req, res) {
-    pg.connect(conString, (err, client, done) => {
+    pg.connect(config.conString, (err, client, done) => {
         if (err) return console.error(err);
         
         let winloss = {win: 0, lose: 0};
@@ -52,7 +52,7 @@ exports.winLoss = function(req, res) {
 };
 
 exports.classResults = function(req, res) {
-    pg.connect(conString, (err, client, done) => {
+    pg.connect(config.conString, (err, client, done) => {
         if (err) return console.error(err);
 
         let record = {
@@ -86,7 +86,7 @@ exports.classResults = function(req, res) {
 };
 
 exports.timeStats = function(req, res) {
-    pg.connect(conString, (err, client, done) => {
+    pg.connect(config.conString, (err, client, done) => {
         if (err) return console.error(err);
 
         let dateObj = {};
@@ -137,7 +137,7 @@ exports.totalRecords = function(req, res) {
         druid: 8
     }
 
-    pg.connect(conString, (err, client, done) => {
+    pg.connect(config.conString, (err, client, done) => {
         if (err) return console.error(err);
 
         // We can make this better later
@@ -266,7 +266,7 @@ exports.totalRecords = function(req, res) {
 };
 
 addGame = function(data) {
-    pg.connect(conString, (err, client, done) => {
+    pg.connect(config.conString, (err, client, done) => {
         if (err) return console.error(err);
         /*console.log('INSERT INTO combined (name, deck, opponent, result, date) VALUES ("' + 
             data.name + '", "' + data.mdeck + '", "' + data.tdeck + '", "' + data.result + '", "' + data.date + '")');*/

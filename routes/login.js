@@ -1,5 +1,3 @@
-const secret = "asdf";
-
 exports.loginGet = (req, res) => {
     res.render('login');
 };
@@ -7,10 +5,9 @@ exports.loginGet = (req, res) => {
 exports.loginPost = (req, res) => {
     var auth = false;
     var sessionID = null;
-    pg.connect(conString, (err, client, done) => {
+    pg.connect(config.conString, (err, client, done) => {
         if (err) return console.error(err);
-
-        var hash = crypto.createHmac('sha256', secret).update(req.body.password).digest('hex')
+        var hash = crypto.createHmac('sha256', config.secret).update(req.body.password).digest('hex')
 
         client.query('SELECT id FROM users WHERE username = $1 AND pass = $2;', [req.body.username, hash], (err, result) => {
             if (!err) {
@@ -39,7 +36,7 @@ exports.loginPost = (req, res) => {
 function newSessionID(userID) {
     var sessionID = crypto.randomBytes(20).toString('hex');
 
-    pg.connect(conString, (err, client, done) => {
+    pg.connect(config.conString, (err, client, done) => {
         if (err) return console.error(err);
 
         // Clear sessions with ID, then add new one
