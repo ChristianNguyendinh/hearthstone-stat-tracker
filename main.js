@@ -51,8 +51,8 @@ server.get('/stats/', checkAuth, (req, res) => {
 server.get('/dashboard/', checkAuth, (req, res) => {
     res.render('dashboard', { name: req.user });
 });
-server.get('/test/', (req, res) => {
-    res.render('dashboard', {name: "asdf124"});
+server.get('/help/', (req, res) => {
+    res.render('help');
 });
 
 ////////// Login and Registration ////////////////////
