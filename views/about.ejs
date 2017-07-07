@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <% include partials/head.ejs %>
+    <style>
+        body {
+            background-color:white;
+        }
+        p {
+            font-size: 1.2vw;
+        }
+    </style>
+</head>
+
+<body style="width: 100%; height: 100%">
+
+    <% include partials/navbar.ejs %>
+
+    <div class="container">
+        <div class="row">
+            <img src="/images/logos/node_logo.png" width="14%" style="margin: 1%" />
+            <img src="/images/logos/express_logo.png" width="14%" style="margin: 1%" />
+            <img src="/images/logos/pg_logo.png" width="14%" style="margin: 1%" />
+            <img src="/images/logos/bootstrap_logo.png" width="14%" style="margin: 1%" />
+            <img src="/images/logos/d3_logo.png" width="14%" style="margin: 1%" />
+            <img src="/images/logos/heroku_logo.png" width="14%" style="margin: 1%" />
+        </div>
+        <div class="row">
+            <hr />
+            <p>Hearthstone Stat Tracker is a side project that was aimed at helping me learn D3, and the basics of a login system.</p>
+            <p>I was into Hearthstone at the time, and needed some data to make charts for, so why not Hearthstone data.</p>
+            <p>Everything is pretty simplistic right now, since I suck at front end design. The charts could also use more interactivity, which I may come back to in the future.</p>
+            <p>The login system design is based on one of my class projects, which used session cookies and a sessions table to handle logins. Obviously, the current implementation is not secure, as it is pretty basic, only hashing your password, doesn't have password recovery, more registration options etc. "Work in progress" for implementing those things.</p>
+            <hr />
+            <p>The app runs on <b>NodeJS</b>, uses <b>ExpressJS</b> for the backend web framework, <b>PostgreSQL</b> for the database, <b>Bootstrap</b> as the frontend framework, <b>D3</b> for visualizing the data, and <b>Heroku</b> for deployment.</p>
+            <ul>
+                <li><b>NodeJS</b> and <b>ExpressJS</b> were fine. I wasn't doing any super advanced backend work for this, just routing and querying mainly, so these two technologies worked fine, and were great to get the project going easily.</li>
+                <li><b>PostgreSQL</b> was a solid DB. I wasn't doing anything big data related and just needed persistant storage, so really any DB would've been fine.</li>
+                <li><b>Bootstrap</b> helped, as I lack front end design skills. The site still looks generic, simple, and bad, but bootstrap helped a lot with formatting and positioning. I didn't see any need for something more advanced like ReactJS, since the front end was planned to be very basic anyways.</li>
+                <li><b>D3</b> was great to work with. I went through making many different charts before picking the ones I thought were best. Previously using Chart.js and other similar libraries, D3 gave me MUCH more freedom to create the exact things I wanted. It had a steeper learning curve, the possiblities of what you could make are definitely better.</li>
+                <li><b>Heroku</b> was mediocre. I'm currently too cheap to buy a server to host it on, and Heroku is free. But deploying changes via their command line was wierd, and I ran into some conflict and build issues. But it was free, so can't complain too much.</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

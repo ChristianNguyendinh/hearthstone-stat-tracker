@@ -40,6 +40,10 @@ server.get('/', (req, res) => {
     res.render('home');
 });
 
+server.get('/about/', (req, res) => {
+    res.render('about');
+});
+
 server.get('/index/', checkAuth, (req, res) => {
     res.render('index', { name: req.user });
 });
@@ -51,6 +55,7 @@ server.get('/stats/', checkAuth, (req, res) => {
 server.get('/dashboard/', checkAuth, (req, res) => {
     res.render('dashboard', { name: req.user });
 });
+
 server.get('/help/', (req, res) => {
     res.render('help');
 });
