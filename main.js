@@ -37,7 +37,7 @@ server.use(session({
 // Routes ///////////////////////////
 
 server.get('/', (req, res) => {
-    res.send("Greetings Traveler");
+    res.render('home');
 });
 
 server.get('/index/', checkAuth, (req, res) => {
