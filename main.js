@@ -61,6 +61,8 @@ server.get('/login/', routes.login.loginGet);
 
 server.post('/login/', routes.login.loginPost);
 
+server.get('/logout/', routes.login.logout);
+
 server.get('/register/', routes.register.registerGet);
 
 server.post('/register/', routes.register.registerPost);

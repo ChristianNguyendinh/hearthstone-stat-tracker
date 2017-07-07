@@ -13,5 +13,5 @@ LOGOUT
 write about page  
 write help page  
 STYLE the dasboard  
-cleanup - code review/cleaning, make PW hidden on form, ???
+cleanup - code review/cleaning, make PW hidden on form, change title, ???
 customizable profiles? - later  

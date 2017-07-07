@@ -31,6 +31,22 @@ exports.loginPost = (req, res) => {
     });
 };
 
+exports.logout = (req, res) => {
+    pg.connect(config.conString, (err, client, done) => {
+        if (err) return console.error(err);
+
+        // Clear sessions with ID, then add new one
+        client.query('DELETE FROM sessions WHERE sessionid = $1', [req.poop.sessionID], (err, result) => {
+            if (err) return console.error(err);
+        })
+        .then(() => {
+            done();
+            req.poop.sessionID = null;
+            res.redirect('/login');
+        });
+    });
+};
+
 // Helpers /////
 
 function newSessionID(userID) {
@@ -59,5 +75,6 @@ function newSessionID(userID) {
         });
     });
 
+    // (hopefully) the DB insert will complete before the next query happens for checkAuth
     return sessionID;
 }
