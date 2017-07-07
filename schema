@@ -1,0 +1,19 @@
+CREATE TABLE games (
+    id serial primary key,
+    name text,
+    deck text,
+    opponent text,
+    result text,
+    date text
+);
+
+CREATE TABLE sessions (
+    sessionid text,
+    userid integer
+);
+
+CREATE TABLE users (
+    id serial primary key,
+    username text,
+    pass text
+);

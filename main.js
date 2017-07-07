@@ -18,8 +18,6 @@ server.use(bodyparser.urlencoded({
 
 server.set('view engine', 'ejs');
 server.use(express.static(path.join(__dirname, 'public')));
-// temp for now
-server.use('/scripts', express.static(path.join(__dirname, '/node_modules/chart.js/dist/')));
 server.use('/scripts', express.static(path.join(__dirname, '/node_modules/d3-tip/')));
 
 // Session Cookies for login
@@ -34,7 +32,7 @@ server.use(session({
 }));
 
 
-// Routes ///////////////////////////
+// EJS Rendered Routes ///////////////////////////
 
 server.get('/', (req, res) => {
     res.render('home');
@@ -105,13 +103,15 @@ server.get('/api/v2/timestats/:name', routes.api_v2.timeStats);
 server.get('/api/v2/classrecords/:name', routes.api_v2.totalRecords);
 
 
+////////// Start the server ////////////////////
 server.set('port', (process.env.PORT || 3000));
 server.listen(server.get('port'), function() {
     console.log("Server started... - " + new Date().toString());
 });
 
-// Middleware functions ///////
 
+
+// Middleware functions ///////////////////////////////////////
 function checkAuth(req, res, next) {
     var auth = false;
 
