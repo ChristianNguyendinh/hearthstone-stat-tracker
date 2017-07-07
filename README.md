@@ -9,9 +9,6 @@ front end design hmm...
     - stats page  
     - Start new session page  
     - about page  
-LOGOUT  
-write about page  
-write help page  
 STYLE the dasboard  
 cleanup - code review/cleaning, make PW hidden on form, change title, ???
 customizable profiles? - later  
