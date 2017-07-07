@@ -2,6 +2,7 @@
 <html>
 <head>
     <% include partials/head.ejs %>
+    <title>Statistics</title>
     <style>
         .record-text {
             font-size: 24px;
@@ -80,10 +81,10 @@
 
         <div class="row">
             <div class="col-xs-5">
-                <h2 id="gamesPlayed" style="text-decoration: underline">Total Games Played</h2>
+                <h2 id="gamesPlayed">Total Games Played</h2>
             </div>
             <div class="col-xs-5">
-                <h2 id="winRate" style="text-decoration: underline">Total Win Rate</h2>
+                <h2 id="winRate">Total Win Rate</h2>
             </div>
         </div>
 
@@ -96,7 +97,7 @@
             </div>
             <div class="col-xs-5">
                 <div>
-                    <h3>Best Class</h3>
+                    <h3>Best Win Rate Class</h3>
                     <div id="winRatePortrait"></div>
                 </div>
             </div>

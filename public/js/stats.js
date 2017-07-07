@@ -483,14 +483,13 @@ $.ajax({type: "GET", url: "/api/v2/classresults/" + userName}).done(function(d) 
 
     // Most Games Played + Win Rate Info -------------
 
-    d3.select("#gamesPlayed")
-        .html("Total Games Played: " + d3.max(dataArray, function(d) { return d['records']['gamesPlayedAs']}));
-
     d3.select("#gamesPlayedPortrait").append("img")
-        .attr("src", getMostPlayedPortrait(dataArray));
+        .attr("src", getMostPlayedPortrait(dataArray))
+        .attr("width", "80%");
 
     d3.select("#winRatePortrait").append("img")
-        .attr("src", getWinRatePortrait(dataArray));
+        .attr("src", getWinRatePortrait(dataArray))
+        .attr("width", "80%");
 
     function getMostPlayedPortrait(d) {
 
@@ -515,7 +514,6 @@ $.ajax({type: "GET", url: "/api/v2/classresults/" + userName}).done(function(d) 
                 bestClass = x['class'];
             }
         });
-        console.log(best)
         return portraits[bestClass]
     }
 
@@ -523,15 +521,15 @@ $.ajax({type: "GET", url: "/api/v2/classresults/" + userName}).done(function(d) 
 
 // WinRate Info ////////////////////////////////////////////////////////////////
 
-var winRateData = null;
-
 $.ajax({type: "GET", url: "/api/v2/winrate/" + userName}).done(function(d) {
-    winRateData = d;
-}).then(function() {
     d3.select("#winRate")
-        .html("Total Win Rate: " + parseInt(winRateData['count']) + "%");
+        .html("Total Win Rate: <u>" + parseInt(d['count']) + "%</u>");
 });
 
+$.ajax({type: "GET", url: "/api/v2/winloss/" + userName}).done(function(d) {
+    d3.select("#gamesPlayed")
+        .html("Total Games Played: <u>" + (d['win'] + d['lose']) + "</u>");
+});
 
 
 

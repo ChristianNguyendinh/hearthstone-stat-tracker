@@ -2,6 +2,7 @@
 <html>
 <head>
     <% include partials/head.ejs %>
+    <title>Login</title>
     <style>
         li:hover {
             background-color: #e7e7e7;
@@ -23,13 +24,13 @@
                     </div>
                     <div style="margin: 5px">
                         <label for="password">Password:</label>
-                        <input name="password" id="password">
+                        <input type="password" name="password" id="password">
                     </div>
                     <div style="clear: both; margin: 15px 0px 0px">
                         <button>Login</button>
                     </div>
                     <div style="margin: 5% 10% 0%">
-                        <div style="float: left"><a href="#"><u>Register</u></a></div>
+                        <div style="float: left"><a href="/register"><u>Register</u></a></div>
                         <div style="float: right"><a href="#"><u>Forgot Password?</u></a></div>
                     </div>
                 </form>
